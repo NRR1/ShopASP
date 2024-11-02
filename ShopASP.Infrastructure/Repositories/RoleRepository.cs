@@ -55,7 +55,7 @@ namespace ShopASP.Infrastructure.Repositories
                 Console.WriteLine(ex.Message.ToString());
             }
         }
-        public async Task UpdateAsync(Role entity)
+        public async Task<Role> UpdateAsync(Role entity)
         {
             db.Roles.Update(entity);
             try
@@ -66,6 +66,7 @@ namespace ShopASP.Infrastructure.Repositories
             {
                 Console.WriteLine(ex.Message.ToString());
             }
+            return entity;
         }
         public async Task DeleteAsync(int id)
         {
