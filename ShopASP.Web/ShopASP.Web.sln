@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Domain", "..\ShopAS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Infrastructure", "..\ShopASP.Infrastructure\ShopASP.Infrastructure.csproj", "{524BF9FA-7A9E-4C5A-9D16-C3E120536B33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Application", "..\ShopASP.Application\ShopASP.Application.csproj", "{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{524BF9FA-7A9E-4C5A-9D16-C3E120536B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{524BF9FA-7A9E-4C5A-9D16-C3E120536B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{524BF9FA-7A9E-4C5A-9D16-C3E120536B33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
