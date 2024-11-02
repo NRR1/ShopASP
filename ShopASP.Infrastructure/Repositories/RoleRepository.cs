@@ -79,6 +79,7 @@ namespace ShopASP.Infrastructure.Repositories
             {
                 Console.WriteLine(ex.Message.ToString());
             }
+
         }
         public Task VerifyAsync(Role entity)
         {
