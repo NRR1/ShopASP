@@ -32,7 +32,7 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task<Role> GetByIDAsync(int id)
         {
-            Role role = await db.Roles.FindAsync(id);
+            Role? role = await db.Roles.FindAsync(id);
             try
             {
                 return role;
@@ -55,7 +55,7 @@ namespace ShopASP.Infrastructure.Repositories
                 Console.WriteLine(ex.Message.ToString());
             }
         }
-        public async Task<Role> UpdateAsync(Role entity)
+        public async Task UpdateAsync(Role entity)
         {
             db.Roles.Update(entity);
             try
@@ -66,11 +66,10 @@ namespace ShopASP.Infrastructure.Repositories
             {
                 Console.WriteLine(ex.Message.ToString());
             }
-            return entity;
         }
         public async Task DeleteAsync(int id)
         {
-            var role = await db.Roles.FindAsync(id);
+            Role? role = await db.Roles.FindAsync(id);
             db.Roles.Remove(role);
             try
             {

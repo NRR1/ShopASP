@@ -56,7 +56,7 @@ namespace ShopASP.Infrastructure.Repositories
                 Console.WriteLine(ex.Message.ToString());
             }
         }
-        public async Task<User> UpdateAsync(User entity)
+        public async Task UpdateAsync(User entity)
         {
             db.Entry(entity).State = EntityState.Modified;
             try
@@ -67,7 +67,6 @@ namespace ShopASP.Infrastructure.Repositories
             {
                 Console.WriteLine(ex.Message.ToString());
             }
-            return entity;
         }
         public async Task VerifyAsync(User entity)
         {
