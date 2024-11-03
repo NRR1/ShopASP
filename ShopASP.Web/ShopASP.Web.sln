@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Web", "ShopASP.Web.csproj", "{E51B9DF1-490C-43CE-90D1-525C7CBB3C43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopASP.Web", "ShopASP.Web.csproj", "{E51B9DF1-490C-43CE-90D1-525C7CBB3C43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Domain", "..\ShopASP.Domain\ShopASP.Domain.csproj", "{3E8A8683-F285-40D6-AD50-53B1349561DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopASP.Domain", "..\ShopASP.Domain\ShopASP.Domain.csproj", "{3E8A8683-F285-40D6-AD50-53B1349561DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Infrastructure", "..\ShopASP.Infrastructure\ShopASP.Infrastructure.csproj", "{524BF9FA-7A9E-4C5A-9D16-C3E120536B33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopASP.Infrastructure", "..\ShopASP.Infrastructure\ShopASP.Infrastructure.csproj", "{524BF9FA-7A9E-4C5A-9D16-C3E120536B33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Application", "..\ShopASP.Application\ShopASP.Application.csproj", "{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopASP.Application", "..\ShopASP.Application\ShopASP.Application.csproj", "{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopASP.Api", "..\ShopASP.Api\ShopASP.Api.csproj", "{82E22079-208F-49B9-8B0D-070CCFEA866D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B8DBCA2-7344-4659-BDD9-E681D1DFCF14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82E22079-208F-49B9-8B0D-070CCFEA866D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82E22079-208F-49B9-8B0D-070CCFEA866D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82E22079-208F-49B9-8B0D-070CCFEA866D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82E22079-208F-49B9-8B0D-070CCFEA866D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

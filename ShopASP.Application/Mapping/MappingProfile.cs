@@ -14,6 +14,7 @@ namespace ShopASP.Application.Mapping
         public MappingProfile()
         {
             CreateMap<Role, RoleDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
         }
     }
 }

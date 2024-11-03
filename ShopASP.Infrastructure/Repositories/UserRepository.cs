@@ -45,7 +45,7 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task CreateAsync(User entity)
         {
-            entity.RoleID = 2; // set role guest for new user
+            entity.RoleID = 3; // set role guest for new user
             await db.Users.AddAsync(entity);
             try
             {
@@ -87,12 +87,11 @@ namespace ShopASP.Infrastructure.Repositories
                 {
                     Console.WriteLine(ex.Message.ToString());
                 }
-                    
             }
         }
         public async Task DeleteAsync(int id)
         {
-            User? user = await db.Users.Include(u => u.RoleID).FirstOrDefaultAsync(x => x.ID == id);
+            User? user = await db.Users.FirstOrDefaultAsync(x => x.ID == id);
             try
             {
                 db.Users.Remove(user);

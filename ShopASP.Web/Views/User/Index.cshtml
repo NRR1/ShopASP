@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShopASP.Application.DTO.UserDTO>
+﻿@model ShopASP.Web.Models.UserRoleViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -13,28 +13,31 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Users.First().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Surname)
+                @Html.DisplayNameFor(model => model.Users.First().Surname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pathronomic)
+                @Html.DisplayNameFor(model => model.Users.First().Pathronomic)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Login)
+                @Html.DisplayNameFor(model => model.Users.First().Login)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Password)
+                @Html.DisplayNameFor(model => model.Users.First().Password)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Roles)
+                @Html.DisplayNameFor(model => model.Users.First().RoleID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users.First().RoleName)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Users) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -52,9 +55,13 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Roles.ID)
+                @Html.DisplayFor(modelItem => item.RoleID)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
+            <td>
+                <a asp-action="Verify" asp-route-id="@item.ID">Verify</a>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
