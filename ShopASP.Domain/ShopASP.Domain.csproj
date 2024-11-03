@@ -6,13 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-
-	<ItemGroup>
-		<ProjectReference Include="..\ShopASP.Domain\ShopASP.Domain.csproj" />
-	</ItemGroup>
-	
-
-
 	<ItemGroup>
 	  <Folder Include="Interface\" />
 	</ItemGroup>
