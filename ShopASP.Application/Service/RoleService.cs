@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using ShopASP.Application.DTO;
 using ShopASP.Domain.Entities;
-using ShopASP.Domain.Interface;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
 using System;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ShopASP.Application.Service
 {
-    public class RoleService : IRoleService
+    public class RoleService : GenericInterface<RoleDTO>
     {
         private readonly GenericInterface<Role> irole;
         private readonly IMapper mapper;
@@ -22,29 +22,33 @@ namespace ShopASP.Application.Service
             irole = _irole;
             mapper = _mapper;
         }
-        public async Task<IEnumerable<RoleDTO>> GetRoles()
+        public async Task<IEnumerable<RoleDTO>> GetAllAsync()
         {
             IEnumerable<Role> roles = await irole.GetAllAsync();
-            return mapper.Map<IEnumerable<RoleDTO>>(roles);
+            return mapper.Map<IEnumerable<RoleDTO>>(roles); 
         }
-        public async Task<RoleDTO> GetRoleByID(int id)
+        public async Task<RoleDTO> GetByIDAsync(int id)
         {
             Role role = await irole.GetByIDAsync(id);
             return mapper.Map<RoleDTO>(role);
         }
-        public Task CreateRole(RoleDTO roledto)
+        public Task CreateAsync(RoleDTO entity)
         {
-            Role role = mapper.Map<Role>(roledto);
+            Role role = mapper.Map<Role>(entity);
             return irole.CreateAsync(role);
         }
-        public Task UpdateRole(RoleDTO roledto)
+        public Task UpdateAsync(RoleDTO entity)
         {
-            Role role = mapper.Map<Role>(roledto);
+            Role role = mapper.Map<Role>(entity);
             return irole.UpdateAsync(role);
         }
-        public Task DeleteRole(int id)
+        public Task DeleteAsync(int id)
         {
             return irole.DeleteAsync(id);
+        }
+        public Task VerifyAsync(RoleDTO entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
