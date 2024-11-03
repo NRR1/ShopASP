@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShopASP.Domain\ShopASP.Domain.csproj" />
+    <ProjectReference Include="..\ShopASP.Infrastructure\ShopASP.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

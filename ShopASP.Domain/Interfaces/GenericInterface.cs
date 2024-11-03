@@ -14,5 +14,6 @@ namespace ShopASP.Domain.Interfaces
         Task<T> UpdateAsync(T entity);
         Task VerifyAsync(T entity);
         Task DeleteAsync(int id);
+        //base interface
     }
 }
