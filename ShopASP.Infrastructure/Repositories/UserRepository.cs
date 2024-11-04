@@ -49,8 +49,16 @@ namespace ShopASP.Infrastructure.Repositories
             {
                 Console.WriteLine('0');
             }
-            entity.RoleID = 2;
-            await db.Users.AddAsync(entity);
+            var user = new User
+            {
+                Name = entity.Name,
+                Surname = entity.Surname,
+                Pathronomic = entity.Pathronomic,
+                Login = entity.Login,
+                Password = entity.Password,
+                RoleID = 2
+            };
+            await db.Users.AddAsync(user);
             try
             {
                 await db.SaveChangesAsync();
