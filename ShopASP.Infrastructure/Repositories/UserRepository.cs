@@ -45,13 +45,17 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task CreateAsync(User entity)
         {
-            entity.RoleID = 3; // set role guest for new user
+            if (entity == null)
+            {
+                Console.WriteLine('0');
+            }
+            entity.RoleID = 2;
             await db.Users.AddAsync(entity);
             try
             {
                 await db.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message.ToString());
             }

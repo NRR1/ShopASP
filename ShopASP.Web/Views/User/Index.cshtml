@@ -1,19 +1,19 @@
 ﻿@model ShopASP.Web.Models.UserRoleViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Список пользователей";
 }
 
-<h1>Index</h1>
+<h1>Список покупателей</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Новый пользователь</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Users.First().Name)
+                @Html.DisplayNameFor(model => model.Users.First().Name) 
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Users.First().Surname)
@@ -61,10 +61,10 @@
                 @Html.DisplayFor(modelItem => item.RoleName)
             </td>
             <td>
-                <a asp-action="Verify" asp-route-id="@item.ID">Verify</a>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Verify" asp-route-id="@item.ID">Верификация</a>
+                <a asp-action="Edit" asp-route-id="@item.ID">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Подробнее</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Удалить</a>
             </td>
         </tr>
 }

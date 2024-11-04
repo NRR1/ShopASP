@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.DTO;
+using ShopASP.Application.Service;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
@@ -64,8 +65,9 @@ namespace ShopASP.Web.Controllers
         }
 
         // GET: User/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.RoleList = new SelectList(await db2.GetAllAsync(), "ID", "Name");
             return View();
         }
 
@@ -74,16 +76,14 @@ namespace ShopASP.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Surname,Pathronomic,Login,Password,RoleID")] UserDTO user)
+        public async Task<IActionResult> Create(UserDTO user)
         {
             if (ModelState.IsValid)
             {
-                //_context.Add(user);
-                //await _context.SaveChangesAsync();
                 await db.CreateAsync(user);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleID"] = new SelectList(user.RoleName, "ID", "ID", user.RoleID);
+            ViewBag.RoleList = new SelectList(await db2.GetAllAsync(), "ID", "ID", user.RoleID);
             return View(user);
         }
 
