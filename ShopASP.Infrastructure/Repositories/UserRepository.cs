@@ -70,7 +70,11 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task UpdateAsync(User entity)
         {
-            db.Entry(entity).State = EntityState.Modified;
+            var user = new User
+            {
+                RoleID = 2
+            };
+            db.Entry(user).State = EntityState.Modified;
             try
             {
                 await db.SaveChangesAsync();
