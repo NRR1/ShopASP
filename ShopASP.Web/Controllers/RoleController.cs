@@ -99,11 +99,11 @@ namespace ShopASP.Web.Controllers
                 {
                     await db.UpdateAsync(roledto);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
                     if (roledto.ID == null)
                     {
-                        return NotFound();
+                        return NotFound(ex.Message);
                     }
                     else
                     {
