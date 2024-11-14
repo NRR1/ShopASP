@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.DTO;
 using ShopASP.Application.Mapping;
-using ShopASP.Application.Service;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
@@ -13,10 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<GenericInterface<Role>, RoleRepository>();
-builder.Services.AddScoped<GenericInterface<RoleDTO>, RoleService>();
-builder.Services.AddScoped<GenericInterface<User>, UserRepository>();
-builder.Services.AddScoped<GenericInterface<UserDTO>, UserService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddDbContext<ShopASPDBContext>(options =>
 {

@@ -1,14 +1,14 @@
-﻿using ShopASP.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using ShopASP.Application.DTO;
+using ShopASP.Domain.Entities;
 
 namespace ShopASP.Application.Mapping
 {
-    public class MappingProfile
+    public class MappingProfile : Profile
     {
-        CreateMap<Role, RoleDTO>
+        public MappingProfile()
+        {
+
+        }
     }
 }
