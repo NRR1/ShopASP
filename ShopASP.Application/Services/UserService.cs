@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using ShopASP.Application.DTO;
 using ShopASP.Application.Interfaces;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShopASP.Application.Services
 {
@@ -22,8 +16,7 @@ namespace ShopASP.Application.Services
             ur = _ur;
             mapper = _mapper;
         }
-
-
+        
         public async Task<IEnumerable<UserDTO>> GetAllAsync()
         {
             IEnumerable<User> users = await ur.GetAllAsync();

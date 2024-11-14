@@ -1,43 +1,99 @@
-﻿using ShopASP.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ShopASP.Infrastructure.Data;
 
 namespace ShopASP.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public Task CreateAsync(User entity)
+        private readonly ShopASPDBContext db;
+        public UserRepository(ShopASPDBContext _db)
         {
-            throw new NotImplementedException();
+            db = _db;
         }
 
-        public Task DeleteAsync(int id)
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            List<User> users = await db.Users.Include(r => r.Roles).ToListAsync();
+            return users;
         }
-
-        public Task<IEnumerable<User>> GetAllAsync()
+        public async Task<User> GetByIDAsync(int id)
         {
-            throw new NotImplementedException();
+            User user = await db.Users.Include(r => r.Roles).FirstOrDefaultAsync(x => x.ID == id);
+            return user;
         }
-
-        public Task<User> GetByIDAsync(int id)
+        public async Task CreateAsync(User entity)
         {
-            throw new NotImplementedException();
+            if(entity == null)
+            {
+                Console.WriteLine("Nothing to add");
+                return;
+            }
+            User user = new User
+            {
+                Name = entity.Name,
+                Surname = entity.Surname,
+                Pathronomic = entity.Pathronomic,
+                Login = entity.Login,
+                Password = entity.Password,
+                RoleID = 2
+            };
+            await db.Users.AddAsync(user);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
-
-        public Task Update(User user)
+        public async Task Update(User user)
         {
-            throw new NotImplementedException();
+            db.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
-
-        public Task Verify(User user)
+        public async Task Verify(User user)
         {
-            throw new NotImplementedException();
+            if(user == null)
+            {
+                Console.WriteLine("Value is null");
+            }
+            User exUser = await db.Users.FindAsync(user.ID);
+            if(exUser != null)
+            {
+                exUser.RoleID = 1;
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message.ToString());
+                }
+            }
+        }
+        public async Task DeleteAsync(int id)
+        {
+            User? user = await db.Users.FirstOrDefaultAsync(x => x.ID == id);
+            db.Users.Remove(user);
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
     }
 }
