@@ -38,12 +38,14 @@ namespace ShopASP.Application.Service
         public Task UpdateAsync(UserDTO entity)
         {
             User user = mapper.Map<User>(entity);
-            return iuser.UpdateAsync(user);
+            return null;
+            //return iuser.UpdateAsync(user);
         }
         public Task VerifyAsync(UserDTO entity)
         {
             User user = mapper.Map<User>(entity);
-            return iuser.VerifyAsync(user);
+            return null;
+            //return iuser.VerifyAsync(user);
         }
         public Task DeleteAsync(int id)
         {

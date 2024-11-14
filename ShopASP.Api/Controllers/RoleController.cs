@@ -37,7 +37,7 @@ namespace ShopASP.Api.Controllers
         [HttpPut("Update role")]
         public async Task<ActionResult<Role>> UpdateRole(Role role)
         {
-            await db.UpdateAsync(role);
+            //await db.UpdateAsync(role);
             return Ok();
         }
     }

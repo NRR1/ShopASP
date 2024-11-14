@@ -122,7 +122,8 @@ namespace ShopASP.Web.Controllers
             {
                 try
                 {
-                    await db.UpdateAsync(userdto);
+                    return null;
+                    //await db.UpdateAsync(userdto);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -152,7 +153,8 @@ namespace ShopASP.Web.Controllers
             {
                 try
                 {
-                    await db.VerifyAsync(userdto);
+                    return null;
+                    //await db.VerifyAsync(userdto);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)

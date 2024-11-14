@@ -40,7 +40,8 @@ namespace ShopASP.Application.Service
         public Task UpdateAsync(RoleDTO entity)
         {
             Role role = mapper.Map<Role>(entity);
-            return irole.UpdateAsync(role);
+            //return irole.UpdateAsync(role);
+            return null;
         }
         public Task DeleteAsync(int id)
         {

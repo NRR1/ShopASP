@@ -97,7 +97,8 @@ namespace ShopASP.Web.Controllers
             {
                 try
                 {
-                    await db.UpdateAsync(roledto);
+                    return null;
+                    //await db.UpdateAsync(roledto);
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
