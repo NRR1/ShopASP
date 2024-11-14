@@ -8,7 +8,14 @@ namespace ShopASP.Application.Mapping
     {
         public MappingProfile()
         {
+            CreateMap<Role, RoleDTO>()
+                .ForMember(dest => dest.rID, opt => opt.MapFrom(src => src.ID))
+                .ForMember(dest => dest.rName, opt => opt.MapFrom(src => src.Name));
+            CreateMap<RoleDTO, Role>()
+                .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.rID))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.rName));
 
+            
         }
     }
 }
