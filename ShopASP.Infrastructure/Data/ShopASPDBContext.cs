@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ShopASP.Infrastructure.Data
 {
-    public class ShopASPDBContext : IdentityDbContext<IdentityUser>
+    public class ShopASPDBContext : DbContext
     {
         public ShopASPDBContext(DbContextOptions<ShopASPDBContext> options) : base(options)
         {

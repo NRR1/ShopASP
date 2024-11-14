@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+
 using ShopASP.Application.DTO;
 using ShopASP.Application.Mapping;
 using ShopASP.Domain.Entities;
@@ -17,6 +19,13 @@ builder.Services.AddDbContext<ShopASPDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("CS"));
 });
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+    .AddEntityFrameworkStores<ShopASPDBContext>()
+    .AddDefaultTokenProviders();
 
 //Добавление MVC
 builder.Services.AddControllersWithViews();
