@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ShopASP.Infrastructure.Repositories
 {
-    public class UserRepository : GenericInterface<User>
+    public class UserRepository : IUserRepository
     {
         private readonly ShopASPDBContext db;
         public UserRepository(ShopASPDBContext _db)

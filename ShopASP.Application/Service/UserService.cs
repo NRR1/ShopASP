@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ShopASP.Application.DTO;
+using ShopASP.Application.Interfaces;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ShopASP.Application.Service
 {
-    public class UserService : GenericInterface<UserDTO>
+    public class UserService : IUserService
     {
         private readonly GenericInterface<User> iuser;
         private readonly IMapper mapper;

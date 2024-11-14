@@ -12,8 +12,6 @@ namespace ShopASP.Domain.Interfaces
         Task<T> GetByIDAsync(int id);
         Task CreateAsync(T entity);
         Task UpdateAsync(T entity);
-        Task VerifyAsync(T entity);
         Task DeleteAsync(int id);
-        //base interface
     }
 }
