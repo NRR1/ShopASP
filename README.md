@@ -21,23 +21,23 @@
 # В итоге получается следующая структура:
 
 # ShopASP.Web
-## Controllers
-## Models
-## Views
-## appsettings.json
-## program.cs
+* Controllers
+* Models
+* Views
+* appsettings.json
+* program.cs
 
 # ShopASP.Infrastructure
-## Data
-## Migrations
-## Repositories
+* Data
+* Migrations
+* Repositories
 
 ## ShopASP.Domain
-# Entities
-# Interfaces
+* Entities
+* Interfaces
 
 ## ShopASP.Application
-# DTO
-# Interfaces
-# Mapping
-# Services
+* DTO
+* Interfaces
+* Mapping
+* Services
