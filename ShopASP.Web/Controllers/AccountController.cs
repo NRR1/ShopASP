@@ -35,9 +35,17 @@ namespace ShopASP.Web.Controllers
             }
             var user = login.Login(model.UserName, model.Password);
 
-            if (user == null)
+            if(user == null)
             {
-                return View("/Home/Error");
+                return View(error);
+            }
+            if(model.Password == null)
+            {
+                return View(error);
+            }
+            if(user == null && model.Password == null)
+            {
+                return View(error);
             }
             return RedirectToAction("Index", "Home");
         }
