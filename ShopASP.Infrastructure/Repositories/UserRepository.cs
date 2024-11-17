@@ -23,6 +23,10 @@ namespace ShopASP.Infrastructure.Repositories
             User user = await db.Users.Include(r => r.Roles).FirstOrDefaultAsync(x => x.ID == id);
             return user;
         }
+        public async Task<User> Login(string login, string password)
+        {
+            return await db.Users.FirstOrDefaultAsync(u => u.Login == login && u.Password == password);
+        }
         public async Task CreateAsync(User entity)
         {
             if(entity == null)
@@ -95,5 +99,7 @@ namespace ShopASP.Infrastructure.Repositories
                 Console.WriteLine(ex.Message.ToString());
             }
         }
+
+
     }
 }
