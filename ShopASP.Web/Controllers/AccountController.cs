@@ -37,27 +37,42 @@ namespace ShopASP.Web.Controllers
 
             if(user == null)
             {
+                ModelState.AddModelError("", "Пользователь не найден");
                 return View(error);
             }
-            if(model.Password == null)
+            if(string.IsNullOrEmpty(model.UserName))
             {
+                ModelState.AddModelError("", "Пользователь не найден");
                 return View(error);
             }
-            if(user == null && model.Password == null)
+            if(string.IsNullOrEmpty(model.Password))
             {
+                ModelState.AddModelError("", "Неверный пароль");
                 return View(error);
             }
-            return RedirectToAction("Index", "Product");
+            if(user != null)
+            {
+                return RedirectToAction("Index", "Product");
+            }
+
+            ModelState.AddModelError("", "Ты молодой спидранер, прошёл все ошибки");
+            return View(error);
         }
 
         [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var newUser = new User
+
+            User newUser = new User
             {
                 Name = model.Name,
                 Surname = model.Surname,
@@ -65,14 +80,41 @@ namespace ShopASP.Web.Controllers
                 Login = model.Login,
                 Password = model.Password
             };
+
             var result = await login.Register(newUser);
-            if(result == null)
+
+            if (result == null)
             {
                 ModelState.AddModelError("", "User is not null");
                 return View(model);
             }
+
             return RedirectToAction("Login");
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> Register(RegisterViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+        //    var newUser = new User
+        //    {
+        //        Name = model.Name,
+        //        Surname = model.Surname,
+        //        Pathronomic = model.Pathronomic,
+        //        Login = model.Login,
+        //        Password = model.Password
+        //    };
+        //    var result = await login.Register(newUser);
+        //    if(result == null)
+        //    {
+        //        ModelState.AddModelError("", "User is not null");
+        //        return View(model);
+        //    }
+        //    return RedirectToAction("Login");
+        //}
 
         public async Task<IActionResult> ResetPassword(ReserPasswordViewModel model)
         {
