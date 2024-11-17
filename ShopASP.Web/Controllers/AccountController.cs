@@ -27,7 +27,7 @@ namespace ShopASP.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, ErrorViewModel error)
         {
             if(!ModelState.IsValid)
             {
@@ -37,8 +37,7 @@ namespace ShopASP.Web.Controllers
 
             if (user == null)
             {
-                ModelState.AddModelError("", "error login or password");
-                return View(model);
+                return View("Error");
             }
             return RedirectToAction("Index", "Home");
         }
