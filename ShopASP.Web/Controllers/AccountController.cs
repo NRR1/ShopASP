@@ -47,7 +47,7 @@ namespace ShopASP.Web.Controllers
             {
                 return View(error);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Product");
         }
 
         [HttpGet]
