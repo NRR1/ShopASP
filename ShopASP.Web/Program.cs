@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 //Добавление MVC
 builder.Services.AddControllersWithViews();
-
+//Что-то новое
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
