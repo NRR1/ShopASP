@@ -37,7 +37,7 @@ namespace ShopASP.Web.Controllers
 
             if (user == null)
             {
-                return View("Error");
+                return View("/Home/Error");
             }
             return RedirectToAction("Index", "Home");
         }
