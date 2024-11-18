@@ -7,6 +7,6 @@ namespace ShopASP.Application.Interfaces
         Task<UserDTO> Login(string login, string password);
         Task<bool> Register(UserDTO userDTO);
         Task<bool> Verify(int id);
-        Task<bool> ResetPassword(int id, string nPassword);
+        Task<bool> ResetPassword(string login, string nPassword);
     }
 }

@@ -64,9 +64,9 @@ namespace ShopASP.Application.Services
 
 
 
-        public async Task<bool> ResetPassword(int id, string nPassword)
+        public async Task<bool> ResetPassword(string login, string nPassword)
         {
-            bool result = await _userRepository.ReserPassword(id, nPassword);
+            bool result = await _userRepository.ReserPassword(login, nPassword);
             return result;
         }
 

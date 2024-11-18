@@ -57,11 +57,11 @@ namespace ShopASP.Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> ReserPassword(int id, string nPassword)
+        public async Task<bool> ReserPassword(string login, string nPassword)
         {
             try
             {
-                User user = await db.Users.FirstOrDefaultAsync(x => x.ID == id);
+                User user = await db.Users.FirstOrDefaultAsync(x => x.Login == login);
                 if (user == null)
                 {
                     Console.WriteLine("User is null");

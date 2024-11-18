@@ -12,7 +12,7 @@ namespace ShopASP.Domain.Interfaces
         Task<T2> Login(string login, string password);
         Task<T2> Register(T2 user);
         Task<bool> Verify(int id);
-        Task<bool> ReserPassword(int id, string nPassword);
+        Task<bool> ReserPassword(string login, string nPassword);
 
     }
 }

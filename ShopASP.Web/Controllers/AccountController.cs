@@ -93,7 +93,7 @@ namespace ShopASP.Web.Controllers
                 return View(model);
             }
 
-            var done = await login.ReserPassword(model.UserID, model.NewPassword);
+            var done = await login.ReserPassword(model.UserName, model.NewPassword);
             if (!done)
             {
                 ModelState.AddModelError("", "Пользователь не найден.");
