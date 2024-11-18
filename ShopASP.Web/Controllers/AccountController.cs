@@ -102,5 +102,10 @@ namespace ShopASP.Web.Controllers
             return RedirectToAction("Login");
         }
 
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
     }
 }
