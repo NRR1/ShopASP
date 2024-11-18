@@ -1,18 +1,35 @@
-﻿@model LoginViewModel
+﻿@model ShopASP.Web.Models.LoginViewModel
 
-<h2>Вход</h2>
-<form asp-action="Login" method="post">
-    <div>
-        <label>Логин</label>
-        <input asp-for="UserName" />
-        <span asp-validation-for="UserName"></span>
-    </div>
-    <div>
-        <label>Пароль</label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <button type="submit">Я уже смешарик</button>
-    <button type="submit" formaction="/Account/Register">Я новенький</button>
+@{
+    ViewData["Title"] = "Login";
+}
 
+<h2>Login</h2>
+
+<form method="post">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <strong>Ошибки при входе:</strong>
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="form-group">
+        <label for="UserName">Username</label>
+        <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.UserName" />
+        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" id="Password" name="Password" value="@Model.Password" />
+        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
 </form>

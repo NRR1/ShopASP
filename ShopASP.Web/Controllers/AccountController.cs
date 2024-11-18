@@ -23,40 +23,44 @@ namespace ShopASP.Web.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            return View(new LoginViewModel());
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model, ErrorViewModel error)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var user = login.Login(model.UserName, model.Password);
 
-            if(user == null)
+            var user = await login.Login(model.UserName, model.Password);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Пользователь не найден/Неправильный логин или пароль");
+                return View(model);
+            }
+
+            if (string.IsNullOrEmpty(model.UserName))
             {
                 ModelState.AddModelError("", "Пользователь не найден");
-                return View(error);
+                return View(model);
             }
-            if(string.IsNullOrEmpty(model.UserName))
-            {
-                ModelState.AddModelError("", "Пользователь не найден");
-                return View(error);
-            }
-            if(string.IsNullOrEmpty(model.Password))
+
+            if (string.IsNullOrEmpty(model.Password))
             {
                 ModelState.AddModelError("", "Неверный пароль");
-                return View(error);
+                return View(model);
             }
-            if(user != null)
+
+            if (user != null)
             {
                 return RedirectToAction("Index", "Product");
             }
 
-            ModelState.AddModelError("", "Ты молодой спидранер, прошёл все ошибки");
-            return View(error);
+            ModelState.AddModelError("", "Неизвестная ошибка");
+            return View(model);
         }
 
         [HttpGet]
@@ -71,8 +75,7 @@ namespace ShopASP.Web.Controllers
             {
                 return View(model);
             }
-
-            User newUser = new User
+            User user = new User
             {
                 Name = model.Name,
                 Surname = model.Surname,
@@ -80,16 +83,13 @@ namespace ShopASP.Web.Controllers
                 Login = model.Login,
                 Password = model.Password
             };
-
-            var result = await login.Register(newUser);
-
-            if (result == null)
+            var result = await login.Register(user);
+            if(result == null)
             {
-                ModelState.AddModelError("", "User is not null");
+                ModelState.AddModelError("", "User is null");
                 return View(model);
             }
-
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Product");
         }
 
         //[HttpGet]

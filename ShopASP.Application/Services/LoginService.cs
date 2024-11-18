@@ -27,12 +27,42 @@ namespace ShopASP.Application.Services
             return _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<UserDTO> Register(UserDTO userDTO)
+        public async Task<bool> Register(UserDTO dto)
         {
-            User user = _mapper.Map<User>(userDTO);
-            User nUser = await _userRepository.Register(user);
-            return _mapper.Map<UserDTO>(nUser);
+            try
+            {
+                // Создаем нового пользователя
+                var user = new User
+                {
+                    Name = dto.uName,
+                    Surname = dto.uSurname,
+                    Pathronomic = dto.uPathronomic,
+                    Login = dto.uLogin,
+                    Password = dto.uPassword,
+                    RoleID = 2 // Роль по умолчанию
+                };
+
+                // Пытаемся сохранить пользователя в базу данных
+                await _userRepository.Register(user);
+
+                // Возвращаем DTO при успешной регистрации
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Ловим исключения, например, при нарушении уникальности
+                if (ex.InnerException?.Message.Contains("UNIQUE") == true)
+                {
+                    // Если логин уже существует, возвращаем null
+                    return false;
+                }
+
+                // Обрабатываем другие исключения или пробрасываем дальше
+                throw;
+            }
         }
+
+
 
         public async Task<bool> ResetPassword(int id, string nPassword)
         {
