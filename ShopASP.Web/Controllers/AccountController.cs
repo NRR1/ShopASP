@@ -1,14 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ShopASP.Application.DTO;
-using ShopASP.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Web.Models;
-using System.Net;
-using System.Security.Claims;
 
 namespace ShopASP.Web.Controllers
 {
@@ -92,29 +85,6 @@ namespace ShopASP.Web.Controllers
             return RedirectToAction("Index", "Product");
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Register(RegisterViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-        //    var newUser = new User
-        //    {
-        //        Name = model.Name,
-        //        Surname = model.Surname,
-        //        Pathronomic = model.Pathronomic,
-        //        Login = model.Login,
-        //        Password = model.Password
-        //    };
-        //    var result = await login.Register(newUser);
-        //    if(result == null)
-        //    {
-        //        ModelState.AddModelError("", "User is not null");
-        //        return View(model);
-        //    }
-        //    return RedirectToAction("Login");
-        //}
 
         public async Task<IActionResult> ResetPassword(ReserPasswordViewModel model)
         {
