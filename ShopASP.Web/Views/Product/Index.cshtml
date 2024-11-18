@@ -1,1 +1,35 @@
-﻿
+﻿@model ShopASP.Web.Models.ProductViewModel
+
+@{
+    ViewData["Title"] = "Список продуктов";
+}
+
+<h2>Продукты</h2>
+
+<p>
+    <a asp-action="Create">Добавить товар</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.pName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.pDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.pCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.pQuantity)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model){
+
+        }
+    </tbody>
+</table>

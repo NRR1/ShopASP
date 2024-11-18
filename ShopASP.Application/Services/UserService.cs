@@ -3,7 +3,6 @@ using ShopASP.Application.DTO;
 using ShopASP.Application.Interfaces;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
-using ShopASP.Infrastructure.Repositories;
 
 namespace ShopASP.Application.Services
 {
