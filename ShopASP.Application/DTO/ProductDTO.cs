@@ -13,6 +13,6 @@ namespace ShopASP.Application.DTO
         public string pDescription { get; set; }
         public int pCost { get; set; }
         public int pQuantity { get; set; }
-        public string pOrders { get; set; }
+        public int pOrders { get; set; }
     }
 }

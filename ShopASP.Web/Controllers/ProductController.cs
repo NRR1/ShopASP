@@ -32,12 +32,25 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            var products = await productService.GetByIDAsync(id);
-            if(products == null)
+            var product = await productService.GetByIDAsync(id);
+            if(product == null)
             {
                 return NotFound();
             }
-            return View(products);
+
+            var viewModel = new ProductViewModel
+            {
+                ID = product.pID,
+                Name = product.pName,
+                Description = product.pDescription,
+                Cost = product.pCost,
+                Quantity = product.pQuantity,
+                Orders = product.pOrders
+            };
+
+            return View(viewModel);
         }
+
+
     }
 }
