@@ -4,6 +4,6 @@ namespace ShopASP.Web.Models
 {
     public class ProductViewModel
     {
-        public ProductDTO Product { get; set; }
+        public IEnumerable<ProductDTO> Products { get; set; }
     }
 }

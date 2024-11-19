@@ -20,6 +20,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ILogin<User>, LoginRepository>();
+builder.Services.AddScoped<IProductReposutory, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddDbContext<ShopASPDBContext>(options =>
 {
