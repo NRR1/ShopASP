@@ -45,7 +45,7 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task CreateAsync(Product entity)
         {
-            db.Products.Add(entity);
+            await db.Products.AddAsync(entity);
             try
             {
                 await db.SaveChangesAsync();

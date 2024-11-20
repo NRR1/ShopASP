@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShopASP.Application.DTO;
 using ShopASP.Application.Interfaces;
+using ShopASP.Application.Services;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Repositories;
 using ShopASP.Web.Models;
@@ -9,44 +10,62 @@ namespace ShopASP.Web.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductReposutory productService;
-        public ProductController(IProductReposutory _productService)
+        private readonly IProductService productService;
+        public ProductController(IProductService _productService)
         {
             productService = _productService;
         }
         public async Task<IActionResult> Index()
         {
             var products = await productService.GetAllAsync();
+
+            // Логирование в контроллере
+            Console.WriteLine($"Retrieved {products.Count()} products from service.");
+
             var viewModel = new ProductViewModel
             {
-                Products = products.Select(p => new ProductDTO
-                {
-                    pID = p.ID,
-                    pName = p.Name,
-                    pDescription = p.Description,
-                    pCost = p.Cost,
-                    pQuantity = p.Quantity
-                }).ToList()
+                Products = products
             };
+            Console.WriteLine($"[Controller] ViewModel contains {viewModel.Products.Count()} products.");
             return View(viewModel);
         }
 
+
         public async Task<IActionResult> Details(int id)
         {
-            var product = await productService.GetByIDAsync(id);
-            if(product == null)
+            var product = await productService.GetByIDAsync(id); // Получаем продукт по ID
+            if (product == null)
             {
-                return NotFound();
+                return NotFound(); // Если продукт не найден, возвращаем ошибку 404
             }
-            var viewModel = new DetailProductViewModel
+
+            var viewModel = new ProductViewModel
             {
-                Id = id,
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Cost,
-                Quantity = product.Quantity
+                Product = product // Данные уже маппированы в сервисе
             };
+
             return View(viewModel);
+        }
+
+        public IActionResult Create()
+        {
+            var view = new ProductViewModel
+            {
+                Product = new ProductDTO()
+            };
+            return View(view);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await productService.CreateAsync(model.Product);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
     }
 }

@@ -4,50 +4,31 @@
     ViewData["Title"] = "Список продуктов";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Создать новый продукт</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Products.First().pID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Products.First().pName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Products.First().pDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Products.First().pCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Products.First().pQuantity)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Products.First().pID)</th>
+            <th>@Html.DisplayNameFor(model => model.Products.First().pName)</th>
+            <th>@Html.DisplayNameFor(model => model.Products.First().pDescription)</th>
+            <th>@Html.DisplayNameFor(model => model.Products.First().pCost)</th>
+            <th>@Html.DisplayNameFor(model => model.Products.First().pQuantity)</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Products)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.pID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.pName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.pDescription)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.pCost)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.pQuantity)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.pID)</td>
+                <td>@Html.DisplayFor(modelItem => item.pName)</td>
+                <td>@Html.DisplayFor(modelItem => item.pDescription)</td>
+                <td>@Html.DisplayFor(modelItem => item.pCost)</td>
+                <td>@Html.DisplayFor(modelItem => item.pQuantity)</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.pID">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.pID">Details</a> |

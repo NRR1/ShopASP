@@ -41,14 +41,14 @@ namespace ShopASP.Application.Mapping
                 .ForMember(dest => dest.pCost, opt => opt.MapFrom(src => src.Cost))
                 .ForMember(dest => dest.pQuantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.pOrders, opt => opt.MapFrom(src => src.Orders));
-            CreateMap<ProductDTO, Product>()
-                .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.pID))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.pName))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.pDescription))
-                .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.pCost))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.pQuantity))
-                .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.pOrders));
-            CreateMap<Product, ProductDTO>().ReverseMap();
+            //CreateMap<ProductDTO, Product>()
+            //    .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.pID))
+            //    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.pName))
+            //    .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.pDescription))
+            //    .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.pCost))
+            //    .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.pQuantity))
+            //    .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.pOrders));
+            //CreateMap<Product, ProductDTO>().ReverseMap();
 
             CreateMap<Order, OrderDTO>()
                 .ForMember(dest => dest.dOrderID, opt => opt.MapFrom(src => src.OrderID))
