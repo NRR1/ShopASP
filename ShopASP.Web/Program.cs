@@ -60,3 +60,8 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
+
+/*
+ Каждый день я плачу и думаю
+ Как тебя хуячу
+ */

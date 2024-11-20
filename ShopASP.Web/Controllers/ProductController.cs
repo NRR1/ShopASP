@@ -1,56 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShopASP.Application.DTO;
 using ShopASP.Application.Interfaces;
 using ShopASP.Domain.Interfaces;
+using ShopASP.Infrastructure.Repositories;
 using ShopASP.Web.Models;
 
 namespace ShopASP.Web.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductService productService;
-        public ProductController(IProductService _product)
+        private readonly IProductReposutory productService;
+        public ProductController(IProductReposutory _productService)
         {
-            productService = _product;
+            productService = _productService;
         }
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var products = await productService.GetAllAsync();
             var viewModel = new ProductViewModel
             {
-                Products = products
+                Products = products.Select(p => new ProductDTO
+                {
+                    pID = p.ID,
+                    pName = p.Name,
+                    pDescription = p.Description,
+                    pCost = p.Cost,
+                    pQuantity = p.Quantity
+                }).ToList()
             };
             return View(viewModel);
-            //products - объект, передающийся с сервиса
-            //Products - объект, передающийся с ViewModel
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
-        {
-            if(id == null)
-            {
-                return NotFound();
-            }
-            var product = await productService.GetByIDAsync(id);
-            if(product == null)
-            {
-                return NotFound();
-            }
-
-            var viewModel = new ProductViewModel
-            {
-                ID = product.pID,
-                Name = product.pName,
-                Description = product.pDescription,
-                Cost = product.pCost,
-                Quantity = product.pQuantity,
-                Orders = product.pOrders
-            };
-
-            return View(viewModel);
-        }
-
-
     }
 }

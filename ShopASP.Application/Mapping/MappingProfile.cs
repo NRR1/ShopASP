@@ -48,6 +48,7 @@ namespace ShopASP.Application.Mapping
                 .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.pCost))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.pQuantity))
                 .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.pOrders));
+            CreateMap<Product, ProductDTO>().ReverseMap();
 
             CreateMap<Order, OrderDTO>()
                 .ForMember(dest => dest.dOrderID, opt => opt.MapFrom(src => src.OrderID))

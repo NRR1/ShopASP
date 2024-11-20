@@ -4,15 +4,17 @@
     ViewData["Title"] = "Список продуктов";
 }
 
-<h2>Продукты</h2>
+<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Добавить товар</a>
+    <a asp-action="Create">Create New</a>
 </p>
-
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Products.First().pID)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Products.First().pName)
             </th>
@@ -28,8 +30,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model.Products){
+        @foreach (var item in Model.Products)
+        {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.pID)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.pName)
                 </td>
@@ -43,9 +49,11 @@
                     @Html.DisplayFor(modelItem => item.pQuantity)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.pID">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.pID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.pID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.pID">Delete</a>
                 </td>
             </tr>
-        }   
+        }
     </tbody>
 </table>
