@@ -18,8 +18,6 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await productService.GetAllAsync();
-
-            // Логирование в контроллере
             Console.WriteLine($"Retrieved {products.Count()} products from service.");
 
             var viewModel = new ProductViewModel
@@ -33,18 +31,27 @@ namespace ShopASP.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var product = await productService.GetByIDAsync(id); // Получаем продукт по ID
+            var product = await productService.GetByIDAsync(id); 
             if (product == null)
             {
-                return NotFound(); // Если продукт не найден, возвращаем ошибку 404
+                return NotFound();
             }
 
-            var viewModel = new ProductViewModel
+            var viewModel = new DetailProductViewModel
             {
-                Product = product // Данные уже маппированы в сервисе
+                Name = product.pName,
+                Description = product.pDescription,
+                Price = product.pCost,
+                Quantity = product.pQuantity
             };
 
             return View(viewModel);
+            //Не работает
+
+            /*
+             InvalidOperationException: The model item passed into the ViewDataDictionary is of type 'ShopASP.Web.Models.ProductViewModel', 
+             but this ViewDataDictionary instance requires a model item of type 'ShopASP.Web.Models.DetailProductViewModel'.
+             */
         }
 
         public IActionResult Create()
@@ -67,5 +74,8 @@ namespace ShopASP.Web.Controllers
             }
             return View(model);
         }
+
+        //Delete не существует
+        //Update не существует
     }
 }

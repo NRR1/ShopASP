@@ -11,7 +11,7 @@ namespace ShopASP.Application.DTO
     {
         [Display(Name = "ID")]
         public int pID { get; set; }
-        [Display(Name = "Название")]
+        [Display(Name = "Название")] 
         public string pName { get; set; }
         [Display(Name = "Описание")]
         public string pDescription { get; set; }
