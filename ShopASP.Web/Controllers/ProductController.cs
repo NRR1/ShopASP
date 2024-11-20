@@ -30,5 +30,23 @@ namespace ShopASP.Web.Controllers
             };
             return View(viewModel);
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var product = await productService.GetByIDAsync(id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new DetailProductViewModel
+            {
+                Id = id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Cost,
+                Quantity = product.Quantity
+            };
+            return View(viewModel);
+        }
     }
 }
