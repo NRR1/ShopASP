@@ -57,7 +57,7 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task UpdateProduct(Product product)
         {
-            db.Entry(product).State = EntityState.Modified;
+            db.Products.Update(product);
             try
             {
                 await db.SaveChangesAsync();

@@ -1,4 +1,4 @@
-﻿@model ShopASP.Web.Models.ProductViewModel
+﻿@model ShopASP.Web.Models.ProductListViewModel
 
 @{
     ViewData["Title"] = "Список продуктов";
@@ -13,12 +13,11 @@
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Products.First().pID)</th>
-            <th>@Html.DisplayNameFor(model => model.Products.First().pName)</th>
-            <th>@Html.DisplayNameFor(model => model.Products.First().pDescription)</th>
-            <th>@Html.DisplayNameFor(model => model.Products.First().pCost)</th>
-            <th>@Html.DisplayNameFor(model => model.Products.First().pQuantity)</th>
-        </tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Количество</th>
     </thead>
     <tbody>
         @foreach (var item in Model.Products)
