@@ -34,7 +34,6 @@ namespace ShopASP.Application.Mapping
                 .ForMember(dest => dest.RoleID, opt => opt.MapFrom(src => src.uRoleID))
                 .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.uRoleName));
 
-            // Настройка маппинга из ProductDTO в Product
             CreateMap<ProductDTO, Product>()
                 .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.pID))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.pName))
@@ -42,7 +41,6 @@ namespace ShopASP.Application.Mapping
                 .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.pCost))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.pQuantity));
 
-            // Если нужно двустороннее маппирование
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.pID, opt => opt.MapFrom(src => src.ID))
                 .ForMember(dest => dest.pName, opt => opt.MapFrom(src => src.Name))

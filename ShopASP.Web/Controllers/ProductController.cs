@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.DTO;
 using ShopASP.Application.Interfaces;
-using ShopASP.Application.Services;
-using ShopASP.Domain.Interfaces;
-using ShopASP.Infrastructure.Repositories;
 using ShopASP.Web.Models;
 
 namespace ShopASP.Web.Controllers
@@ -19,13 +15,11 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await productService.GetAllAsync();
-            //Console.WriteLine($"Retrieved {products.Count()} products from service.");
-
+            
             var viewModel = new ProductListViewModel
             {
                 Products = products
             };
-            //Console.WriteLine($"[Controller] ViewModel contains {viewModel.Product} products.");
             return View(viewModel);
         }
 
@@ -94,42 +88,6 @@ namespace ShopASP.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductViewModel model)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(model);
-            //}
-
-            //// Обновляем продукт через сервис
-            //var productDTO = model.Product; // Это ваш изменённый продукт
-            //await productService.UpdateProduct(productDTO);
-
-            //return RedirectToAction(nameof(Index));
-            //if(id == null)
-            //{
-            //    return NotFound();
-            //}
-            //if(ModelState.IsValid)
-            //{
-            //    var prDTO = model.Product;
-            //    try
-            //    {
-            //        await productService.UpdateProduct(prDTO);
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if(prDTO.pID == null)
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(model);
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -141,8 +99,39 @@ namespace ShopASP.Web.Controllers
         }
 
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var dprod = await productService.GetByIDAsync(id);
+            if (dprod == null)
+            {
+                return NotFound();
+            }
 
+            var model = new DetailProductViewModel
+            {
+                Id = dprod.pID,
+                Name = dprod.pName,
+                Description = dprod.pDescription,
+                Price = dprod.pCost,
+                Quantity = dprod.pQuantity,
+            };
+            return View(model);
+        }
 
-        //Delete не существует
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var prod = await productService.GetByIDAsync(id);
+            if(prod != null)
+            {
+                await productService.DeleteAsync(id);
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
