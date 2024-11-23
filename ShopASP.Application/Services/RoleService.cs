@@ -20,26 +20,68 @@ namespace ShopASP.Application.Services
         public async Task<IEnumerable<RoleDTO>> GetAllAsync()
         {
             IEnumerable<Role> roles = await roleRepository.GetAllAsync();
-            return mapper.Map<IEnumerable<RoleDTO>>(roles);
+            try
+            {
+                return mapper.Map<IEnumerable<RoleDTO>>(roles);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public async Task<RoleDTO> GetByIDAsync(int id)
         {
             Role role = await roleRepository.GetByIDAsync(id);
-            return mapper.Map<RoleDTO>(role);
+            try
+            {
+                return mapper.Map<RoleDTO>(role);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public async Task CreateAsync(RoleDTO entity)
         {
             Role role = mapper.Map<Role>(entity);
-            await roleRepository.CreateAsync(role);
+            try
+            {
+                await roleRepository.CreateAsync(role);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
         public async Task UpdateRole(RoleDTO roleDTO)
         {
             Role role = mapper.Map<Role>(roleDTO);
-            await roleRepository.UpdateRole(role);
+            try
+            {
+                await roleRepository.UpdateRole(role);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
         public async Task DeleteAsync(int id)
         {
-            await roleRepository.DeleteAsync(id);
+            try
+            {
+                await roleRepository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
     }
 }

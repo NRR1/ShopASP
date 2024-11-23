@@ -15,28 +15,65 @@ namespace ShopASP.Infrastructure.Repositories
         public async Task<IEnumerable<Role>> GetAllAsync()
         {
             IEnumerable<Role> roles = await db.Roles.ToListAsync();
-            return roles;
+            try
+            {
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public async Task<Role> GetByIDAsync(int id)
         {
             Role? role = await db.Roles.FindAsync(id);
-            return role;
+            try
+            {
+                return role;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public async Task CreateAsync(Role entity)
         {
             await db.Roles.AddAsync(entity);
-            await db.SaveChangesAsync();
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
         public async Task UpdateRole(Role role)
         {
             db.Roles.Update(role);
-            await db.SaveChangesAsync();
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
         public async Task DeleteAsync(int id)
         {
             Role? role = await db.Roles.FindAsync(id);
             db.Roles.Remove(role);
-            await db.SaveChangesAsync();
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
         }
     }
 }

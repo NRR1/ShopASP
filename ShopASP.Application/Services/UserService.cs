@@ -20,31 +20,79 @@ namespace ShopASP.Application.Services
         public async Task<IEnumerable<UserDTO>> GetAllAsync()
         {
             IEnumerable<User> users = await userRepository.GetAllAsync();
-            return mapper.Map<IEnumerable<UserDTO>>(users);
+            try
+            {
+                return mapper.Map<IEnumerable<UserDTO>>(users);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Service error : " + ex.Message.ToString());
+                return null;
+            }
         }
         public async Task<UserDTO> GetByIDAsync(int id)
         {
             User user = await userRepository.GetByIDAsync(id);
-            return mapper.Map<UserDTO>(user);
+            try
+            {
+                return mapper.Map<UserDTO>(user);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Service error : " + ex.Message.ToString());
+                return null;
+            }
         }
         public Task CreateAsync(UserDTO entity)
         {
             User user = mapper.Map<User>(entity);
-            return userRepository.CreateAsync(user);
+            try
+            {
+                return userRepository.CreateAsync(user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Service error : "+ex.Message.ToString());
+                return null;
+            }
         }
         public Task UpdateUser(UserDTO userDTO)
         {
             User user = mapper.Map<User>(userDTO);
-            return userRepository.Update(user);
+            try
+            {
+                return userRepository.Update(user);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Service error : " + ex.Message.ToString());
+                return null;
+            }
         }
         public Task VerifyUser(UserDTO userDTO)
         {
             User user = mapper.Map<User>(userDTO);
-            return userRepository.Verify(user);
+            try
+            {
+                return userRepository.Verify(user);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Service error : " + ex.Message.ToString());
+                return null;
+            }
         }
         public Task DeleteAsync(int id)
         {
-            return userRepository.DeleteAsync(id);
+            try
+            {
+                return userRepository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Service error : " + ex.Message.ToString());
+                return null;
+            }
         }
     }
 }

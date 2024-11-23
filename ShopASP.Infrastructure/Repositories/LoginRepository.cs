@@ -22,7 +22,7 @@ namespace ShopASP.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                Console.WriteLine("Repos error " + ex.Message.ToString());
                 return null;
             }
         }
@@ -52,7 +52,7 @@ namespace ShopASP.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                Console.WriteLine("Repos error " + ex.Message.ToString());
                 return null;
             }
         }
@@ -74,7 +74,7 @@ namespace ShopASP.Infrastructure.Repositories
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                Console.WriteLine("Repos error " + ex.Message.ToString());
                 return false;
             }
         }
@@ -83,24 +83,25 @@ namespace ShopASP.Infrastructure.Repositories
         {
             try
             {
-                User user = await db.Users.FirstOrDefaultAsync(x => x.ID == id);
-                if (user == null)
-                {
-                    Console.WriteLine("User is null");
-                    return false;
-                }
-                if (user.RoleID == 1)
-                {
-                    Console.WriteLine("User is verified");
-                    return true;
-                }
-                user.RoleID = 1;
-                await db.SaveChangesAsync();
+                //ну прикольно смотрится
+                //User user = await db.Users.FirstOrDefaultAsync(x => x.ID == id);
+                //if (user == null)
+                //{
+                //    Console.WriteLine("User is null");
+                //    return false;
+                //}
+                //if (user.RoleID == 1)
+                //{
+                //    Console.WriteLine("User is verified");
+                //    return true;
+                //}
+                //user.RoleID = 1;
+                //await db.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Repos error " + ex.Message.ToString());
                 return false;
             }
         }

@@ -3,11 +3,6 @@ using ShopASP.Application.DTO;
 using ShopASP.Application.Interfaces;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShopASP.Application.Services
 {
@@ -24,14 +19,21 @@ namespace ShopASP.Application.Services
         public async Task<UserDTO> Login(string login, string password)
         {
             User user = await _userRepository.Login(login, password);
-            return _mapper.Map<UserDTO>(user);
+            try
+            {
+                return _mapper.Map<UserDTO>(user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service error : " + ex.Message.ToString());
+                return null;
+            }
         }
 
         public async Task<bool> Register(UserDTO dto)
         {
             try
             {
-                // Создаем нового пользователя
                 var user = new User
                 {
                     Name = dto.uName,
@@ -39,25 +41,17 @@ namespace ShopASP.Application.Services
                     Pathronomic = dto.uPathronomic,
                     Login = dto.uLogin,
                     Password = dto.uPassword,
-                    RoleID = 2 // Роль по умолчанию
                 };
-
-                // Пытаемся сохранить пользователя в базу данных
                 await _userRepository.Register(user);
-
-                // Возвращаем DTO при успешной регистрации
                 return true;
             }
             catch (Exception ex)
             {
-                // Ловим исключения, например, при нарушении уникальности
                 if (ex.InnerException?.Message.Contains("UNIQUE") == true)
                 {
-                    // Если логин уже существует, возвращаем null
+                    Console.WriteLine("service error : " + ex.Message.ToString());
                     return false;
                 }
-
-                // Обрабатываем другие исключения или пробрасываем дальше
                 throw;
             }
         }
@@ -67,13 +61,29 @@ namespace ShopASP.Application.Services
         public async Task<bool> ResetPassword(string login, string nPassword)
         {
             bool result = await _userRepository.ReserPassword(login, nPassword);
-            return result;
+            try
+            {
+                return result;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("service error : " + ex.Message.ToString());
+                return false;
+            }
         }
 
         public async Task<bool> Verify(int id)
         {
             bool result = await _userRepository.Verify(id);
-            return result;
+            try
+            {
+                return result;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("service error " + ex.Message.ToString());
+                return false;
+            }
         }
     }
 }

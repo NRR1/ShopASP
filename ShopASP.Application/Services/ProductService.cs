@@ -20,26 +20,71 @@ namespace ShopASP.Application.Services
         public async Task<IEnumerable<ProductDTO>> GetAllAsync()
         {
             var products = await productRepository.GetAllAsync();
-            return mapper.Map<IEnumerable<ProductDTO>>(products);
+            try
+            {
+                return mapper.Map<IEnumerable<ProductDTO>>(products);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public async Task<ProductDTO> GetByIDAsync(int id)
         {
             var product = await productRepository.GetByIDAsync(id);
-            return mapper.Map<ProductDTO>(product);
+            try
+            {
+                return mapper.Map<ProductDTO>(product);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public Task CreateAsync(ProductDTO entity)
         {
             var product = mapper.Map<Product>(entity);
-            return productRepository.CreateAsync(product);
+            try
+            {
+                return productRepository.CreateAsync(product);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public Task UpdateProduct(ProductDTO productDTO)
         {
             var product = mapper.Map<Product>(productDTO);
-            return productRepository.UpdateProduct(product);
+            try
+            {
+                return productRepository.UpdateProduct(product);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
         public Task DeleteAsync(int id)
         {
-            return productRepository.DeleteAsync(id);
+            try
+            {
+                return productRepository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("service");
+                Console.WriteLine(ex.Message.ToString());
+                return null;
+            }
         }
     }
 }

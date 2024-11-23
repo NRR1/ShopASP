@@ -29,11 +29,11 @@ namespace ShopASP.Web.Controllers
 
             var user = await login.Login(model.UserName, model.Password);
 
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Пользователь не найден/Неправильный логин или пароль");
-                return View(model);
-            }
+            //if (user == null)
+            //{
+            //    ModelState.AddModelError("", "Пользователь не найден/Неправильный логин или пароль");
+            //    return View(model);
+            //}
 
             if (string.IsNullOrEmpty(model.UserName))
             {
@@ -50,6 +50,7 @@ namespace ShopASP.Web.Controllers
             if (user != null)
             {
                 return RedirectToAction("Index", "Product");
+                //
             }
 
             ModelState.AddModelError("", "Неизвестная ошибка");
@@ -77,11 +78,12 @@ namespace ShopASP.Web.Controllers
                 Password = model.Password
             };
             var result = await login.Register(user);
-            if(result == null)
+            /*if(result == null)
             {
                 ModelState.AddModelError("", "User is null");
                 return View(model);
             }
+            */
             return RedirectToAction("Index", "Product");
         }
 
@@ -101,7 +103,6 @@ namespace ShopASP.Web.Controllers
             }
             return RedirectToAction("Login");
         }
-
 
         public IActionResult Privacy()
         {
