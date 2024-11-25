@@ -4,6 +4,7 @@ namespace ShopASP.Domain.Entities
 {
     public class User //: IdentityUser<int>
     {
+        public int ID { get; set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string? Pathronomic { get; set; }

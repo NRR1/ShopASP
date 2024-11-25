@@ -84,19 +84,19 @@ namespace ShopASP.Infrastructure.Repositories
             try
             {
                 //ну прикольно смотрится
-                //User user = await db.Users.FirstOrDefaultAsync(x => x.ID == id);
-                //if (user == null)
-                //{
-                //    Console.WriteLine("User is null");
-                //    return false;
-                //}
-                //if (user.RoleID == 1)
-                //{
-                //    Console.WriteLine("User is verified");
-                //    return true;
-                //}
-                //user.RoleID = 1;
-                //await db.SaveChangesAsync();
+                User user = await db.Users.FirstOrDefaultAsync(x => x.ID == id);
+                if (user == null)
+                {
+                    Console.WriteLine("User is null");
+                    return false;
+                }
+                if (user.RoleID == 1)
+                {
+                    Console.WriteLine("User is verified");
+                    return true;
+                }
+                user.RoleID = 1;
+                await db.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
