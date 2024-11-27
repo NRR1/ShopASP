@@ -66,17 +66,17 @@ namespace ShopASP.Web.Controllers
         
         public IActionResult Create()
         {
-            var user = new ProductListViewModel();
-            var autorizeUser = user.User.uRoleName;
-            if(autorizeUser != "Admin")
-            {
-                return Forbid();
-            }
-            var view = new ProductViewModel
-            {
-                Product = new ProductDTO()
-            };
-            return View(view);
+            //var user = new ProductListViewModel();
+            //var autorizeUser = user.User.uRoleName;
+            //if(autorizeUser != "Admin")
+            //{
+            //    return Forbid();
+            //}
+            //var view = new ProductViewModel
+            //{
+            //    Product = new ProductDTO()
+            //};
+            return View(/*view*/);
             //Создается объект для передачи между слоями, передаётся на представление
         }
 
@@ -84,17 +84,17 @@ namespace ShopASP.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel model)
         {
-            var user = new ProductListViewModel();
-            var autorizeUser = user.User.uRoleName;
-            if (autorizeUser != "Admin")
-            {
-                return Forbid();
-            }
-            if (ModelState.IsValid)
-            {
-                await productService.CreateAsync(model.Product);
-                return RedirectToAction(nameof(Index));
-            }
+            //var user = new ProductListViewModel();
+            //var autorizeUser = user.User.uRoleName;
+            //if (autorizeUser != "Admin")
+            //{
+            //    return Forbid();
+            //}
+            //if (ModelState.IsValid)
+            //{
+            //    await productService.CreateAsync(model.Product);
+            //    return RedirectToAction(nameof(Index));
+            //}
             return View(model);
             //Та же модель передаётся в сервис
         }
@@ -102,21 +102,21 @@ namespace ShopASP.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var user = new ProductListViewModel();
-            var autorizeUser = user.User.uRoleName;
-            if (autorizeUser != "Admin")
-            {
-                return Forbid();
-            }
-            var prod = await productService.GetByIDAsync(id);
-            if (prod == null)
-            {
-                return NotFound();
-            }
+            //var user = new ProductListViewModel();
+            //var autorizeUser = user.User.uRoleName;
+            //if (autorizeUser != "Admin")
+            //{
+            //    return Forbid();
+            //}
+            //var prod = await productService.GetByIDAsync(id);
+            //if (prod == null)
+            //{
+            //    return NotFound();
+            //}
 
             var viewModel = new ProductViewModel
             {
-                Product = prod
+                //Product = prod
             };
             return View(viewModel);
             //Передаётся объект модели на представление путем подставки через метод GetByID
@@ -127,11 +127,11 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> Edit(ProductViewModel model)
         {
             var user = new ProductListViewModel();
-            var autorizeUser = user.User.uRoleName;
-            if (autorizeUser != "Admin")
-            {
-                return Forbid();
-            }
+            //var autorizeUser = user.User.uRoleName;
+            //if (autorizeUser != "Admin")
+            //{
+            //    return Forbid();
+            //}
 
             if (!ModelState.IsValid)
             {
@@ -148,11 +148,11 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var user = new ProductListViewModel();
-            var autorizeUser = user.User.uRoleName.ToString();
-            if (autorizeUser != "Admin")
-            {
-                return Forbid();
-            }
+            //var autorizeUser = user.User.uRoleName.ToString();
+            //if (autorizeUser != "Admin")
+            //{
+            //    return Forbid();
+            //}
 
 
             if (id == null)
@@ -182,11 +182,11 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = new ProductListViewModel();
-            var autorizeUser = user.User.uRoleName;
-            if (autorizeUser != "Admin")
-            {
-                return Forbid();
-            }
+            //var autorizeUser = user.User.uRoleName;
+            //if (autorizeUser != "Admin")
+            //{
+            //    return Forbid();
+            //}
 
 
             var prod = await productService.GetByIDAsync(id);

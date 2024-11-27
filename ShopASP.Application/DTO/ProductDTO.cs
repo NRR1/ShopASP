@@ -19,7 +19,6 @@ namespace ShopASP.Application.DTO
         public int pCost { get; set; }
         [Display(Name = "Количество")]
         public int pQuantity { get; set; }
-        [Display(Name = "Заказы?")]
-        public int pOrders { get; set; }
+        
     }
 }

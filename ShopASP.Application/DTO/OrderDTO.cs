@@ -10,9 +10,8 @@ namespace ShopASP.Application.DTO
     {
         public int dOrderID { get; set; }
         public int dUserID { get; set; }
-        public int dProductID { get; set; }
-
         public string dUser { get; set; }
+        public int dProductID { get; set; }
         public string dProduct { get; set; }
     }
 }

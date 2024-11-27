@@ -36,11 +36,11 @@ namespace ShopASP.Application.Services
             {
                 var user = new User
                 {
-                    Name = dto.uName,
-                    Surname = dto.uSurname,
-                    Pathronomic = dto.uPathronomic,
-                    Login = dto.uLogin,
-                    Password = dto.uPassword,
+                    Name = dto.Name,
+                    Surname = dto.Surname,
+                    Pathronomic = dto.Pathronomic,
+                    //Login = dto.uLogin,
+                    //Password = dto.uPassword,
                 };
                 await _userRepository.Register(user);
                 return true;

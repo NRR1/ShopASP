@@ -2,7 +2,8 @@
 {
     public class RoleDTO
     {
-        public int rID { get; set; }
-        public string rName { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public ICollection<int> UserIDs { get; set; }
     }
 }

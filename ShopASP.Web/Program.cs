@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.Interfaces;
-using ShopASP.Application.Mapping;
+//using ShopASP.Application.Mapping;
 using ShopASP.Application.Services;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
@@ -13,7 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddAutoMapper(typeof(MappingProfile));         
+//builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddIdentity<User, Role>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+})
+.AddEntityFrameworkStores<ShopASPDBContext>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddDbContext<ShopASPDBContext>(options =>
 {
