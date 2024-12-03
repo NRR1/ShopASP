@@ -11,7 +11,7 @@
         <form asp-action="Create" method="post">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
+         <div class="form-group">
             <label asp-for="Product.pName" class="control-label"></label>
             <input asp-for="Product.pName" class="form-control"/>
             <span asp-validation-for="Product.pName" class="text-danger"></span>
@@ -30,7 +30,7 @@
             <label asp-for="Product.pQuantity" class="control-label"></label>
             <input asp-for="Product.pQuantity" class="form-control" />
             <span asp-validation-for="Product.pQuantity" class="text-danger"></span>
-        </div>
+        </div> 
         <div class="form-group">
             <input type="submit" value="Create" class="btn btn-primary"/>
         </div>

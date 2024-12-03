@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.Interfaces;
-//using ShopASP.Application.Mapping;
+using ShopASP.Application.Mapping;
 using ShopASP.Application.Services;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
@@ -13,16 +12,33 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<IProductReposutory, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
-builder.Services.AddIdentity<User, Role>(options =>
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ShopASPDBContext>()
+    .AddDefaultTokenProviders();    
+builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-})
-.AddEntityFrameworkStores<ShopASPDBContext>()
-.AddDefaultTokenProviders();
+    options.Password.RequireDigit = true;               //содержит хотя бы 1 цифру+
+    options.Password.RequiredLength = 8;                //минимальная длинна пароля +
+    options.Password.RequireNonAlphanumeric = true;     //требует спецсимвол +
+    options.Password.RequireUppercase = true;           //требует заглавную букву+
+    options.Password.RequireLowercase = true;           //требует строчную букву+
+    options.Password.RequiredUniqueChars = 1;           //Требует уникальный символ+
+    //Пример идеального пароля: @vdoshka931MMM
+
+
+    //Админ зарегистрирован под:
+    /*
+    UserName = admin@mail.ru
+    Email = admin@mail.ru
+    Password = @dminPassword667
+
+    Все эти данные находятся в файле DbInitializer
+     */
+});
 
 builder.Services.AddDbContext<ShopASPDBContext>(options =>
 {
@@ -31,6 +47,20 @@ builder.Services.AddDbContext<ShopASPDBContext>(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await DbInitializer.InitializeAsync(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ошибка при инициализации БД");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -49,6 +79,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Product}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

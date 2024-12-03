@@ -1,22 +1,6 @@
-﻿using AutoMapper.Configuration.Annotations;
-using Microsoft.AspNetCore.Mvc;
-using ShopASP.Application.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
 using ShopASP.Application.Interfaces;
 using ShopASP.Web.Models;
-
-/*
- Контроллер связывает между собой модели и представление
- Представление хранятся в некой папке, например Product
- Ровно такое же слово в названии имеет контроллер, что их связывает
- В представлении указываются методы, которые находятся в представлении
- 
- Теперь о моделях. Они указываются в using представления и передают некоторые данные в через себя
- Например в данной структуре данные в модель передаются через DTO, которая служит для упрощения и оптимизации передачи между
- разными слоями приложения
- В контроллере в свою очередь используется интерфейс IProductService, который включает в себя набор методов
- Он определяется через приватное поле для чтения и так же в конструкторе контроллера. После через эту переменную мы можем
- возвращать методы, попутно передавая значения(по необходимости)
- */
 
 namespace ShopASP.Web.Controllers
 {
@@ -30,17 +14,11 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await productService.GetAllAsync();
-            
             var viewModel = new ProductListViewModel
             {
                 Products = products
             };
             return View(viewModel);
-
-            /*
-             * Сначала определяется переменная products от метода. После создаётся объект ViewModel,
-             * который передаётся в представление
-             */
         }
 
 
@@ -52,20 +30,23 @@ namespace ShopASP.Web.Controllers
                 return NotFound();
             }
 
-            var viewModel = new DetailProductViewModel
-            {
-                Name = product.pName,
-                Description = product.pDescription,
-                Price = product.pCost,
-                Quantity = product.pQuantity
-            };
-
+            var viewModel = new DetailProductViewModel { };
             return View(viewModel);
-            //Ровно тоже самое что и в Index()
         }
         
         public IActionResult Create()
         {
+            var user = new ProductListViewModel();
+            var autoUser = user.User.dRoleNames.ToString();
+            if(autoUser != "Admin")
+            {
+                return Forbid();
+            }
+            var prod = new ProductViewModel
+            {
+                Product = new Application.DTO.ProductDTO()
+            };
+            return View(prod);
             //var user = new ProductListViewModel();
             //var autorizeUser = user.User.uRoleName;
             //if(autorizeUser != "Admin")
@@ -76,7 +57,7 @@ namespace ShopASP.Web.Controllers
             //{
             //    Product = new ProductDTO()
             //};
-            return View(/*view*/);
+            //return View(/*view*/);
             //Создается объект для передачи между слоями, передаётся на представление
         }
 
@@ -165,14 +146,14 @@ namespace ShopASP.Web.Controllers
                 return NotFound();
             }
 
-            var model = new DetailProductViewModel
-            {
-                Id = dprod.pID,
-                Name = dprod.pName,
-                Description = dprod.pDescription,
-                Price = dprod.pCost,
-                Quantity = dprod.pQuantity,
-            };
+            var model = new DetailProductViewModel { };
+            //{
+            //    Id = dprod.pID,
+            //    Name = dprod.pName,
+            //    Description = dprod.pDescription,
+            //    Price = dprod.pCost,
+            //    Quantity = dprod.pQuantity,
+            //};
             return View(model);
             //Аналогично методу Update
         }

@@ -2,12 +2,17 @@
 {
     public class UserDTO
     {
-        public int ID { get; set; }
-        public string? Name { get; set; }
-        public string? Surname { get; set; }
-        public string? Pathronomic { get; set; }
-        public string Email { get; set; }
-        public ICollection<int> RoleIDs { get; set; }
-        public ICollection<string> RoleNames { get; set; }
+        public int dID { get; set; }
+        public string dSurname { get; set; }
+        public string dPathronomic { get; set; }
+        public string dEmail { get; set; }
+        public ICollection<int> dRoleID { get; set; }
+        public ICollection<string> dRoleNames { get; set; }
+
+        public UserDTO()
+        {
+            dRoleID = new HashSet<int>();
+            dRoleNames = new HashSet<string>();
+        }
     }
 }

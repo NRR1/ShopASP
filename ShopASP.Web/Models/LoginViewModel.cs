@@ -1,8 +1,15 @@
-﻿namespace ShopASP.Web.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ShopASP.Web.Models
 {
     public class LoginViewModel
     {
-        public string UserName { get; set; }
+        [Required(ErrorMessage = "Введите имя пользователя")]
+        public string Login { get; set; }
+
+        [Required(ErrorMessage = "Введите пароль")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        public bool RememberMe { get; set; }
     }
 }
