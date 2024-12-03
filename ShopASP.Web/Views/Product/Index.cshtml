@@ -7,7 +7,10 @@
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Создать новый продукт</a>
+    @if(Context.Session.GetString("UserRole") == "Admin")
+    {
+        <a asp-action="Create">Создать новый продукт</a>
+    }
 </p>
 
 <table class="table">
@@ -18,22 +21,39 @@
             <th>Описание</th>
             <th>Цена</th>
             <th>Количество</th>
+            @if(!User.IsInRole("Admin"))
+            {
+                <th>Информация</th>
+            }
+            else{
+                <th>Действия</th>
+            }
+            <tr/>
     </thead>
     <tbody>
         @foreach (var item in Model.Products)
         {
-            @* <tr>
+            <tr>
                 <td>@Html.DisplayFor(modelItem => item.pID)</td>
                 <td>@Html.DisplayFor(modelItem => item.pName)</td>
                 <td>@Html.DisplayFor(modelItem => item.pDescription)</td>
                 <td>@Html.DisplayFor(modelItem => item.pCost)</td>
                 <td>@Html.DisplayFor(modelItem => item.pQuantity)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.pID">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.pID">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.pID">Delete</a>
-                </td>
-            </tr> *@
+                @if(User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.pID">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.pID">Delete</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
+                    </td>
+                }
+            </tr> 
         }
     </tbody>
 </table>

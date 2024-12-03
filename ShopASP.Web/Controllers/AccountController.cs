@@ -8,10 +8,17 @@ namespace ShopASP.Web.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
+
         public AccountController(UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _singInManager)
         {
             userManager = _userManager;
             signInManager = _singInManager;
+        }
+
+        public IActionResult SetRole()
+        {
+            HttpContext.Session.SetString("UserRole", "Admin");
+            return RedirectToAction("Index", "Product");
         }
 
         public IActionResult Register()
@@ -25,17 +32,17 @@ namespace ShopASP.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = regModel.Name, Email = regModel.Email };
+                var user = new IdentityUser { UserName = regModel.Login, Email = regModel.Email };
                 var result = await userManager.CreateAsync(user, regModel.Password);
 
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Product");
                 }
                 else
                 {
-                    foreach(var error in result.Errors)
+                    foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -50,31 +57,50 @@ namespace ShopASP.Web.Controllers
             return View(lVM);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel logModel)
+        public async Task<IActionResult> Login(LoginViewModel logModel, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(logModel.Login, logModel.Password, logModel.RememberMe, lockoutOnFailure: false);
-                if(result.Succeeded)
+                var user = await userManager.FindByEmailAsync(logModel.Login);
+                if (user != null)
                 {
-                    Console.WriteLine("Nice login");
-                    return RedirectToAction("Index", "Product");
-                }
-                else
-                {
-                    Console.WriteLine("not nice");
-                    ModelState.AddModelError(string.Empty, "Invalid login attemp");
+                    var result = await signInManager.PasswordSignInAsync(user, logModel.Password, logModel.RememberMe, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                    {
+                        // Сохраняем роль в сессии
+                        var role = await userManager.GetRolesAsync(user);
+                        HttpContext.Session.SetString("UserRole", role.FirstOrDefault());
+
+                        // Перенаправляем на URL, если он есть, иначе на главную страницу
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    }
                 }
             }
             return View(logModel);
         }
 
-        public async Task<IActionResult> Logout()
+        private IActionResult RedirectToLocal(string returnUrl)
         {
-            await signInManager.SignOutAsync();
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Product");  // Перенаправление на страницу продуктов
+            }
+        }
+
+
+        public IActionResult Logout()
+        {
+            signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }

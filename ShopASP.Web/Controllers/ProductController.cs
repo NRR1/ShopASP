@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopASP.Application.Interfaces;
 using ShopASP.Web.Models;
 
 namespace ShopASP.Web.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IProductService productService;
@@ -13,6 +15,11 @@ namespace ShopASP.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if(userRole == "Admin")
+            {
+                ViewBag.Message = "Вы админ._.";
+            }
             var products = await productService.GetAllAsync();
             var viewModel = new ProductListViewModel
             {
