@@ -14,18 +14,19 @@ namespace ShopASP.Web.Controllers
             userManager = _userManager;
             signInManager = _singInManager;
         }
-
         public IActionResult SetRole()
         {
             HttpContext.Session.SetString("UserRole", "Admin");
             return RedirectToAction("Index", "Product");
         }
-
+        public IActionResult Privacy()
+        {
+            return View();
+        }
         public IActionResult Register()
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel regModel)
@@ -50,13 +51,11 @@ namespace ShopASP.Web.Controllers
             }
             return View(regModel);
         }
-
         public IActionResult Login()
         {
             LoginViewModel lVM = new LoginViewModel();
             return View(lVM);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel logModel, string returnUrl = null)
@@ -97,11 +96,15 @@ namespace ShopASP.Web.Controllers
             }
         }
 
-
-        public IActionResult Logout()
+       // [HttpPost]
+        public async Task<IActionResult> Logout()
         {
-            signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            await signInManager.SignOutAsync();
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Product");
+            //HttpContext.Session.Clear();
+            ////signInManager.SignOutAsync();
+            //return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -20,6 +20,10 @@ namespace ShopASP.Web.Controllers
             {
                 ViewBag.Message = "Вы админ._.";
             }
+            else
+            {
+                ViewBag.Message = "Авторизуйтесь для продолжения";
+            }
             var products = await productService.GetAllAsync();
             var viewModel = new ProductListViewModel
             {
@@ -40,52 +44,87 @@ namespace ShopASP.Web.Controllers
             var viewModel = new DetailProductViewModel { };
             return View(viewModel);
         }
-        
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")] 
         public IActionResult Create()
         {
-            var user = new ProductListViewModel();
-            var autoUser = user.User.dRoleNames.ToString();
-            if(autoUser != "Admin")
-            {
-                return Forbid();
-            }
             var prod = new ProductViewModel
             {
                 Product = new Application.DTO.ProductDTO()
             };
             return View(prod);
-            //var user = new ProductListViewModel();
-            //var autorizeUser = user.User.uRoleName;
-            //if(autorizeUser != "Admin")
-            //{
-            //    return Forbid();
-            //}
-            //var view = new ProductViewModel
-            //{
-            //    Product = new ProductDTO()
-            //};
-            //return View(/*view*/);
-            //Создается объект для передачи между слоями, передаётся на представление
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(ProductViewModel model)
         {
-            //var user = new ProductListViewModel();
-            //var autorizeUser = user.User.uRoleName;
-            //if (autorizeUser != "Admin")
-            //{
-            //    return Forbid();
-            //}
-            //if (ModelState.IsValid)
-            //{
-            //    await productService.CreateAsync(model.Product);
-            //    return RedirectToAction(nameof(Index));
-            //}
+            if (ModelState.IsValid)
+            {
+                await productService.CreateAsync(model.Product);
+                return RedirectToAction(nameof(Index));
+            }
             return View(model);
-            //Та же модель передаётся в сервис
         }
+
+        //public IActionResult Create()
+        //{
+        //    var user = new ProductListViewModel();
+        //    var autoUser = user.User.dRoleNames.ToString();
+        //    if(autoUser != "Admin")
+        //    {
+        //        return Forbid();
+        //    }
+        //    var prod = new ProductViewModel
+        //    {
+        //        Product = new Application.DTO.ProductDTO()
+        //    };
+        //    return View(prod);
+        //    //var user = new ProductListViewModel();
+        //    //var autorizeUser = user.User.uRoleName;
+        //    //if(autorizeUser != "Admin")
+        //    //{
+        //    //    return Forbid();
+        //    //}
+        //    //var view = new ProductViewModel
+        //    //{
+        //    //    Product = new ProductDTO()
+        //    //};
+        //    //return View(/*view*/);
+        //    //Создается объект для передачи между слоями, передаётся на представление
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(ProductViewModel model)
+        //{
+        //    // Проверяем, имеет ли пользователь права администратора
+        //    var user = new ProductListViewModel();
+        //    var autorizeUser = user.User.uRoleName;
+
+        //    if (autorizeUser != "Admin")
+        //    {
+        //        // Если нет, запрещаем доступ
+        //        return Forbid();
+        //    }
+
+        //    // Проверяем, прошла ли модель валидацию
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Если да, вызываем метод сервиса для создания продукта
+        //        await productService.CreateAsync(model.Product);
+
+        //        // Перенаправляем на метод Index после успешного создания
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    // Если модель не валидна, возвращаем представление с моделью
+        //    return View(model);
+        //}
+
+
 
 
         public async Task<IActionResult> Edit(int id)

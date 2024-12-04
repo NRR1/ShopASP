@@ -21,12 +21,12 @@
             <th>Описание</th>
             <th>Цена</th>
             <th>Количество</th>
-            @if(!User.IsInRole("Admin"))
+            @if(Context.Session.GetString("UserRole") != "Admin")
             {
                 <th>Информация</th>
             }
             else{
-                <th>Действия</th>
+                <th>Действие</th>
             }
             <tr/>
     </thead>
@@ -39,20 +39,17 @@
                 <td>@Html.DisplayFor(modelItem => item.pDescription)</td>
                 <td>@Html.DisplayFor(modelItem => item.pCost)</td>
                 <td>@Html.DisplayFor(modelItem => item.pQuantity)</td>
-                @if(User.IsInRole("Admin"))
-                {
-                    <td>
+                <td>
+                    @if(Context.Session.GetString("UserRole") != "Admin")
+                    {
+                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
+                    }
+                    else{
+                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
                         <a asp-action="Edit" asp-route-id="@item.pID">Edit</a>
-                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
                         <a asp-action="Delete" asp-route-id="@item.pID">Delete</a>
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
-                    </td>
-                }
+                    }
+                </td>
             </tr> 
         }
     </tbody>

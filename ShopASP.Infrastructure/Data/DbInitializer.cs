@@ -20,7 +20,8 @@ namespace ShopASP.Infrastructure.Data
                     await roleManager.CreateAsync(new IdentityRole(role));
                 }
             }
-
+            //AvdoshkaMMM
+            //@vdoshkaMMM931
             var user = await userManager.FindByEmailAsync("admin@mail.ru");
             if(user == null)
             {
