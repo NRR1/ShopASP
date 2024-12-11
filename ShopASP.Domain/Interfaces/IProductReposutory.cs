@@ -10,5 +10,6 @@ namespace ShopASP.Domain.Interfaces
     public interface IProductReposutory : GenericInterface<Product>
     {
         Task UpdateProduct(Product product);
+        
     }
 }

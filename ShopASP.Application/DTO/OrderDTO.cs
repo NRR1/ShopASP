@@ -2,10 +2,15 @@
 {
     public class OrderDTO
     {
-        public int dOrderID { get; set; }
-        public int dUserID { get; set; }
-        public int dProductID { get; set; }
-        public string dUserName { get; set; }
-        public string dProductName { get; set; }
+        public int ID { get; set; }
+        public string UserID { get; set; }
+        public string UserName { get; set; }
+        public DateTime OrderDate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public ICollection<OrderProductDTO> OrderProducts { get; set; }
+        public OrderDTO()
+        {
+            OrderProducts = new List<OrderProductDTO>();
+        }
     }
 }

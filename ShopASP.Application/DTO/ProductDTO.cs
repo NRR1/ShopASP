@@ -2,10 +2,11 @@
 {
     public class ProductDTO
     {
-        public int pID { get; set; }
-        public string pName { get; set; }
-        public string pDescription { get; set; }
-        public int pCost { get; set; }
-        public int pQuantity { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Cost { get; set; }
+        public int Quantity { get; set; }
     }
+
 }

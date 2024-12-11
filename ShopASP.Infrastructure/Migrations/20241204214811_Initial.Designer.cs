@@ -12,8 +12,8 @@ using ShopASP.Infrastructure.Data;
 namespace ShopASP.Infrastructure.Migrations
 {
     [DbContext(typeof(ShopASPDBContext))]
-    [Migration("20241203104218_initial")]
-    partial class initial
+    [Migration("20241204214811_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,13 +237,13 @@ namespace ShopASP.Infrastructure.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("UserID")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -356,7 +356,7 @@ namespace ShopASP.Infrastructure.Migrations
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -366,7 +366,7 @@ namespace ShopASP.Infrastructure.Migrations
             modelBuilder.Entity("ShopASP.Domain.Entities.OrderProduct", b =>
                 {
                     b.HasOne("Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderProducts")
                         .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -380,6 +380,11 @@ namespace ShopASP.Infrastructure.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Order", b =>
+                {
+                    b.Navigation("OrderProducts");
                 });
 #pragma warning restore 612, 618
         }
