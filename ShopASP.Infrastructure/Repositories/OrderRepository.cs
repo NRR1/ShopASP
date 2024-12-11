@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShopASP.Infrastructure.Repositories
 {
@@ -16,50 +11,40 @@ namespace ShopASP.Infrastructure.Repositories
         {
             db = _db;
         }
+
         public async Task<IEnumerable<Order>> GetAllAsync()
         {
-            List<Order> orders = await db.Orders
-                .Include(o => o.OrderProducts)
-                .ThenInclude(op => op.Product)
-                .ToListAsync();
-            try
-            {
-                return orders;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-                return null;
-            }
+            var orders = await db.Orders.ToListAsync();
+            return orders;
         }
+
         public async Task<Order> GetByIDAsync(int id)
         {
-            Order? order = await db.Orders
-                                   .Where(o => o.UserId == id.ToString())
-                                   .Include(o => o.OrderProducts)
-                                   .ThenInclude(op => op.Product)
-                                   .FirstOrDefaultAsync(x => x.ID == id);
-            try
+            var order = await db.Orders.FindAsync(id);
+            return order;
+        }
+
+        public async Task CreateAsync(Order order)
+        {
+            db.Orders.Add(order);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task UpdateOrder(Order order)
+        {
+            db.Orders.Update(order);
+            await db.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            Order? dOrder = await db.Orders.FindAsync(id);
+            if(dOrder == null)
             {
-                return order;
+                Console.WriteLine("order is null");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-                return null;
-            }
-        }
-        public Task CreateAsync(Order entity)
-        {
-            throw new NotImplementedException();
-        }
-        public Task UpdateOrder(Order order)
-        {
-            throw new NotImplementedException();
-        }
-        public Task DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
+            db.Orders.Remove(dOrder);
+            await db.SaveChangesAsync();
         }
     }
 }

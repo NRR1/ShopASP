@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.Interfaces;
 using ShopASP.Application.Mapping;
-using ShopASP.Application.Services;
+//using ShopASP.Application.Services;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
@@ -28,8 +28,9 @@ builder.Services.AddSession(options =>
 
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddScoped<IProductReposutory, ProductRepository>();
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+//builder.Services.AddScoped<IProductReposutory, ProductRepository>();
+//builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ShopASPDBContext>()

@@ -1,56 +1,33 @@
-﻿@model ShopASP.Web.Models.ProductListViewModel
+﻿@model IEnumerable<ShopASP.Web.Models.ProductListViewModel>
 
-@{
-    ViewData["Title"] = "Список продуктов";
-}
-
-<h1>@ViewData["Title"]</h1>
-
-<p>
-    @if(Context.Session.GetString("UserRole") == "Admin")
-    {
-        <a asp-action="Create">Создать новый продукт</a>
-    }
-</p>
+<h2>Product List</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th>ID</th>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Цена</th>
-            <th>Количество</th>
-            @if(Context.Session.GetString("UserRole") != "Admin")
-            {
-                <th>Информация</th>
-            }
-            else{
-                <th>Действие</th>
-            }
-            <tr/>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Products)
+        @foreach (var product in Model)
         {
-            @* <tr>
-                <td>@Html.DisplayFor(modelItem => item.pID)</td>
-                <td>@Html.DisplayFor(modelItem => item.pName)</td>
-                <td>@Html.DisplayFor(modelItem => item.pDescription)</td>
-                <td>@Html.DisplayFor(modelItem => item.pCost)</td>
-                <td>@Html.DisplayFor(modelItem => item.pQuantity)</td>
+            <tr>
+                <td>@product.Products.First().ID</td>
+                <td>@product.Products.First().Name</td>
+                <td>@product.Products.First().Cost</td>
+                <td>@product.Products.First().Description</td>
                 <td>
-                    @if(Context.Session.GetString("UserRole") != "Admin")
-                    {
-                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
-                    }
-                    else{
-                        <a asp-action="Details" asp-route-id="@item.pID">Details</a>
-                        <a asp-action="Edit" asp-route-id="@item.pID">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.pID">Delete</a>
-                    }
+                    <a asp-action="Details" asp-route-id="@product.Products.First().ID">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@product.Products.First().ID">Edit</a> |
+                    <a asp-action="Detele" asp-route-id="@product.Products.First().ID">Delete</a>
                 </td>
-            </tr>  *@
+            </tr>
         }
     </tbody>
 </table>
+
+<a asp-action="Create" class="btn btn-primary">Add New Product</a>

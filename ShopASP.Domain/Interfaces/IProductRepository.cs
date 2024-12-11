@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace ShopASP.Domain.Interfaces
 {
-    public interface IProductReposutory : GenericInterface<Product>
+    public interface IProductRepository : GenericInterface<Product>
     {
-        Task UpdateProduct(Product product);
-        
+        Task UpdateAsync(Product product);
     }
 }

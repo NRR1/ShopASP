@@ -5,7 +5,7 @@ using ShopASP.Infrastructure.Data;
 
 namespace ShopASP.Infrastructure.Repositories
 {
-    public class ProductRepository : IProductReposutory
+    public class ProductRepository : IProductRepository
     {
         private readonly ShopASPDBContext db;
         public ProductRepository(ShopASPDBContext _db)
@@ -27,7 +27,7 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task<Product> GetByIDAsync(int id)
         {
-            Product product = await db.Products.FindAsync(id);
+            Product? product = await db.Products.FindAsync(id);
             try
             {
                 return product;
@@ -40,7 +40,7 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task CreateAsync(Product entity)
         {
-            await db.Products.AddAsync(entity);
+            db.Products.Add(entity);
             try
             {
                 await db.SaveChangesAsync();
@@ -50,7 +50,7 @@ namespace ShopASP.Infrastructure.Repositories
                 Console.WriteLine(ex.Message.ToString());
             }
         }
-        public async Task UpdateProduct(Product product)
+        public async Task UpdateAsync(Product product)
         {
             db.Products.Update(product);
             try
@@ -64,8 +64,8 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task DeleteAsync(int id)
         {
-            var delProduct = await db.Products.FindAsync(id);
-            db.Products.Remove(delProduct);
+            Product? dP = await db.Products.FindAsync(id);
+            db.Products.Remove(dP);
             try
             {
                 await db.SaveChangesAsync();
