@@ -1,16 +1,18 @@
-﻿namespace ShopASP.Application.DTO
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ShopASP.Application.DTO
 {
     public class OrderDTO
     {
-        public int ID { get; set; }
-        public string UserID { get; set; }
-        public string UserName { get; set; }
-        public DateTime OrderDate { get; set; }
-        public decimal TotalAmount { get; set; }
-        public ICollection<OrderProductDTO> OrderProducts { get; set; }
-        public OrderDTO()
-        {
-            OrderProducts = new List<OrderProductDTO>();
-        }
+        public int dOrderID { get; set; }
+        public string dUserID { get; set; }
+        public DateTime dOrderDate { get; set; }
+        public decimal dTotalAmount { get; set; }
+
+        public List<OrderProductDTO> dOrderProducts { get; set; }
     }
 }

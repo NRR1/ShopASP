@@ -1,0 +1,15 @@
+﻿@model ShopASP.Web.Models.ProductViewModel
+
+<h2>Вы уверены, что хотите удалить товар?</h2>
+
+<div>
+    <h3>@Model.Name</h3>
+    <p>@Model.Description</p>
+    <p>Цена: @Model.Cost</p>
+    <p>Количество: @Model.Quantity</p>
+</div>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Отменить</a>
+</form>

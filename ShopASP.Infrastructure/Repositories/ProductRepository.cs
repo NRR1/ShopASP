@@ -2,6 +2,12 @@
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ShopASP.Infrastructure.Repositories
 {
@@ -12,68 +18,31 @@ namespace ShopASP.Infrastructure.Repositories
         {
             db = _db;
         }
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<IEnumerable<Product>> GetAll()
         {
-            List<Product> products = await db.Products.ToListAsync();
-            try
-            {
-                return products;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-                return null;
-            }
+            IEnumerable<Product> products = await db.Products.ToListAsync();
+            return products;
         }
-        public async Task<Product> GetByIDAsync(int id)
+        public async Task<Product> GetByID(int id)
         {
             Product? product = await db.Products.FindAsync(id);
-            try
-            {
-                return product;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-                return null;
-            }
+            return product;
         }
-        public async Task CreateAsync(Product entity)
+        public async Task Create(Product entity)
         {
-            db.Products.Add(entity);
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
+            await db.Products.AddAsync(entity);
+            await db.SaveChangesAsync();
         }
-        public async Task UpdateAsync(Product product)
+        public async Task Update(Product product)
         {
             db.Products.Update(product);
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
+            await db.SaveChangesAsync();
         }
-        public async Task DeleteAsync(int id)
+        public async Task Delete(int id)
         {
-            Product? dP = await db.Products.FindAsync(id);
-            db.Products.Remove(dP);
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
+            Product? product = await db.Products.FindAsync(id);
+            db.Products.Remove(product);
+            await db.SaveChangesAsync();
         }
     }
 }

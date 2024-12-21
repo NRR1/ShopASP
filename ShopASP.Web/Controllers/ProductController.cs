@@ -1,24 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShopASP.Domain.Interfaces;
+using ShopASP.Application.Interface;
 using ShopASP.Web.Models;
 
 namespace ShopASP.Web.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductRepository productRepository;
-        public ProductController(IProductRepository _productRepository)
+        private readonly IProductService service;
+        public ProductController(IProductService _service)
         {
-            productRepository = _productRepository;
+            service = _service;
         }
-        public async IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = await productRepository.GetAllAsync();
-            var vm = products.Select(p => new ProductListViewModel
-            {
-                ID = p.ID,
-                
-            });
+            var products = await service.GetAll();
+            var vm = products.Select(dto => ProductListViewModel.FromDTO(dto)).ToList();
+            return View(vm);
         }
+
+
     }
 }

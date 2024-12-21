@@ -9,6 +9,7 @@
             <th>Name</th>
             <th>Price</th>
             <th>Description</th>
+            <th>Quantity</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -16,14 +17,15 @@
         @foreach (var product in Model)
         {
             <tr>
-                <td>@product.Products.First().ID</td>
-                <td>@product.Products.First().Name</td>
-                <td>@product.Products.First().Cost</td>
-                <td>@product.Products.First().Description</td>
+                <td>@product.ID</td>
+                <td>@product.Name</td>
+                <td>@product.Cost</td>
+                <td>@product.Description</td>
+                <td>@product.Quantity</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@product.Products.First().ID">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@product.Products.First().ID">Edit</a> |
-                    <a asp-action="Detele" asp-route-id="@product.Products.First().ID">Delete</a>
+                    <a asp-action="Details" asp-route-id="@product.ID">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@product.ID">Edit</a> |
+                    <a asp-action="Detele" asp-route-id="@product.ID">Delete</a>
                 </td>
             </tr>
         }

@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using ShopASP.Application.DTO;
 using ShopASP.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ShopASP.Application.Mapping
 {
@@ -9,31 +13,30 @@ namespace ShopASP.Application.Mapping
     {
         public MappingProfile()
         {
-            // Order -> OrderDTO
             CreateMap<Order, OrderDTO>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName)) // Маппинг имени пользователя
-                .ForMember(dest => dest.OrderProducts, opt => opt.MapFrom(src => src.OrderProducts)); // Маппинг продуктов в заказе
+                .ForMember(dest => dest.dOrderID, opt => opt.MapFrom(src => src.ID))
+                .ForMember(dest => dest.dUserID, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.dOrderDate, opt => opt.MapFrom(src => src.OrderDate))
+                .ForMember(dest => dest.dTotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
+                .ForMember(dest => dest.dOrderProducts, opt => opt.MapFrom(src => src.OrderProducts))
+                .ReverseMap();
 
-            // OrderProduct -> OrderProductDTO
             CreateMap<OrderProduct, OrderProductDTO>()
-                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name)) // Название товара
-                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Cost)); // Стоимость товара
+                .ForMember(dest => dest.OrderProductId, opt => opt.MapFrom(src => src.ID))
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderID))
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductID))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty))
+                .ForMember(dest => dest.ProductCost, opt => opt.MapFrom(src => src.Product != null ? src.Product.Cost : 0))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+                .ReverseMap();
 
-            // Product -> ProductDTO
-            CreateMap<Product, ProductDTO>();
-
-            // IdentityUser -> UserDTO
-            CreateMap<IdentityUser, UserDTO>()
-                .ForMember(dest => dest.dID, opt => opt.MapFrom(src => int.Parse(src.Id))) // Преобразование string ID в int
-                .ForMember(dest => dest.dEmail, opt => opt.MapFrom(src => src.Email)) // Электронная почта
-                .ForMember(dest => dest.dSurname, opt => opt.Ignore()) // Игнорируем, если таких полей нет
-                .ForMember(dest => dest.dPathronomic, opt => opt.Ignore()) // Аналогично
-                .ForMember(dest => dest.dRoleNames, opt => opt.Ignore()); // Роли можно настроить отдельно, если требуется
-
-            // IdentityRole -> RoleDTO
-            CreateMap<IdentityRole, RoleDTO>()
-                .ForMember(dest => dest.dID, opt => opt.MapFrom(src => int.Parse(src.Id))) // Преобразование string ID в int
-                .ForMember(dest => dest.dName, opt => opt.MapFrom(src => src.Name));
+            CreateMap<Product, ProductDTO>()
+                .ForMember(dest => dest.pdID, opt => opt.MapFrom(src => src.ID))
+                .ForMember(dest => dest.pdName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.pdDescription, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.pdCost, opt => opt.MapFrom(src => src.Cost))
+                .ForMember(dest => dest.pdQuantity, opt => opt.MapFrom(src => src.Quantity))
+                .ReverseMap();
         }
     }
 }

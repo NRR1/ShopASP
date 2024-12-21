@@ -8,18 +8,11 @@ namespace ShopASP.Application.DTO
 {
     public class OrderProductDTO
     {
-        public int ID { get; set; }
-        public int OrderID { get; set; }
-        public int ProductID { get; set; }
-        public int Quantity { get; set; }
+        public int OrderProductId { get; set; }
+        public int OrderId { get; set; }
+        public int ProductId { get; set; }
         public string ProductName { get; set; }
-
-        // Конструктор
-        public OrderProductDTO()
-        {
-            // Инициализация коллекций или любых других значений, если необходимо
-        }
+        public decimal ProductCost { get; set; }
+        public int Quantity { get; set; }
     }
-
-
 }

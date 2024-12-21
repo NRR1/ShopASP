@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShopASP.Application.Interfaces
+namespace ShopASP.Application.Interface
 {
     public interface IProductService : GenericInterface<ProductDTO>
     {
-        Task UpdateProduct(ProductDTO productDTO);
+        Task Update(ProductDTO productDTO);
     }
 }
