@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ShopASP.Domain.Entities;
 
 namespace ShopASP.Infrastructure.Data
 {
-    public class ShopASPDBContext : IdentityDbContext
+    public class ShopASPDBContext : IdentityDbContext<User>
     {
         public ShopASPDBContext(DbContextOptions<ShopASPDBContext> options) : base(options)
         {

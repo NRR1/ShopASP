@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ShopASP.Domain.Entities;
 
 namespace ShopASP.Infrastructure.Data
 {
@@ -9,23 +10,22 @@ namespace ShopASP.Infrastructure.Data
         public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>(); // Используем кастомный User
             var logger = serviceProvider.GetRequiredService<ILogger<DbInitializer>>();
 
             var roles = new[] { "Admin", "Moderator", "User" };
             foreach (var role in roles)
             {
-                if(!await roleManager.RoleExistsAsync(role))
+                if (!await roleManager.RoleExistsAsync(role))
                 {
                     await roleManager.CreateAsync(new IdentityRole(role));
                 }
             }
-            //AvdoshkaMMM
-            //@vdoshkaMMM931
+
             var user = await userManager.FindByEmailAsync("admin@mail.ru");
-            if(user == null)
+            if (user == null)
             {
-                user = new IdentityUser
+                user = new User
                 {
                     UserName = "admin@mail.ru",
                     Email = "admin@mail.ru"
@@ -34,7 +34,7 @@ namespace ShopASP.Infrastructure.Data
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
-                    logger.LogInformation($"Пользователь {user.Email.ToString()} успешно создан и назначена роль Admin");
+                    logger.LogInformation($"Пользователь {user.Email} успешно создан и назначена роль Admin");
                 }
                 else
                 {

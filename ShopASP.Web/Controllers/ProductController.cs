@@ -12,13 +12,14 @@ namespace ShopASP.Web.Controllers
         {
             service = _service;
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var products = await service.GetAll();
+            IEnumerable<ProductDTO> products = await service.GetAll();
             List<ProductListViewModel> vm = products.Select(dto => ProductListViewModel.FromDTO(dto)).ToList();
             return View(vm);
         }
-
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             if(id == null)
@@ -82,7 +83,7 @@ namespace ShopASP.Web.Controllers
             }
             return View(vm);
         }
-
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             if(id == null)
@@ -94,7 +95,7 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            var vm = ProductViewModel.FromDTO(product);
+            ProductViewModel vm = ProductViewModel.FromDTO(product);
             return View(vm);
         }
 
@@ -102,7 +103,7 @@ namespace ShopASP.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConf(int id)
         {
-            var product = await service.GetByID(id);
+            ProductDTO product = await service.GetByID(id);
             if(product != null)
             {
                 await service.Delete(id);

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.Interface;
 using ShopASP.Application.Mapping;
 using ShopASP.Application.Services;
+using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
 using ShopASP.Infrastructure.Repositories;
@@ -32,7 +33,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ShopASPDBContext>()
     .AddDefaultTokenProviders();    
 builder.Services.Configure<IdentityOptions>(options =>
@@ -54,6 +55,12 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     Все эти данные находятся в файле DbInitializer
      */
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
 builder.Services.AddDbContext<ShopASPDBContext>(options =>

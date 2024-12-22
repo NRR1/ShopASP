@@ -1,40 +1,46 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ShopASP.Domain.Entities;
 using ShopASP.Web.Models;
 
 namespace ShopASP.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
-        public AccountController(UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _singInManager)
+        public AccountController(UserManager<User> _userManager, SignInManager<User> _signInManager)
         {
             userManager = _userManager;
-            signInManager = _singInManager;
+            signInManager = _signInManager;
         }
+
         public IActionResult SetRole()
         {
             HttpContext.Session.SetString("UserRole", "Admin");
             return RedirectToAction("Index", "Product");
         }
+
         public IActionResult Privacy()
         {
             return View();
         }
+
         public IActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel regModel)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = new IdentityUser { UserName = regModel.Login, Email = regModel.Email };
-                IdentityResult result = await userManager.CreateAsync(user, regModel.Password);
+                // Используем кастомный класс User
+                var user = new User { UserName = regModel.Login, Email = regModel.Email };
+                var result = await userManager.CreateAsync(user, regModel.Password);
 
                 if (result.Succeeded)
                 {
@@ -51,18 +57,21 @@ namespace ShopASP.Web.Controllers
             }
             return View(regModel);
         }
+
         public IActionResult Login()
         {
-            LoginViewModel lVM = new LoginViewModel();
+            var lVM = new LoginViewModel();
             return View(lVM);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel logModel, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = await userManager.FindByEmailAsync(logModel.Login);
+                // Используем кастомный класс User
+                var user = await userManager.FindByEmailAsync(logModel.Login);
                 if (user != null)
                 {
                     var result = await signInManager.PasswordSignInAsync(user, logModel.Password, logModel.RememberMe, lockoutOnFailure: false);
@@ -92,11 +101,10 @@ namespace ShopASP.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Product");  // Перенаправление на страницу продуктов
+                return RedirectToAction("Index", "Product"); // Перенаправление на страницу продуктов
             }
         }
 
-       // [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
