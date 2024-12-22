@@ -33,8 +33,8 @@ namespace ShopASP.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = regModel.Login, Email = regModel.Email };
-                var result = await userManager.CreateAsync(user, regModel.Password);
+                IdentityUser user = new IdentityUser { UserName = regModel.Login, Email = regModel.Email };
+                IdentityResult result = await userManager.CreateAsync(user, regModel.Password);
 
                 if (result.Succeeded)
                 {
@@ -62,7 +62,7 @@ namespace ShopASP.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByEmailAsync(logModel.Login);
+                IdentityUser user = await userManager.FindByEmailAsync(logModel.Login);
                 if (user != null)
                 {
                     var result = await signInManager.PasswordSignInAsync(user, logModel.Password, logModel.RememberMe, lockoutOnFailure: false);
@@ -102,9 +102,6 @@ namespace ShopASP.Web.Controllers
             await signInManager.SignOutAsync();
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Product");
-            //HttpContext.Session.Clear();
-            ////signInManager.SignOutAsync();
-            //return RedirectToAction("Index", "Home");
         }
     }
 }
