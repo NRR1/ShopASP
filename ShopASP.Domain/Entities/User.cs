@@ -11,5 +11,6 @@ namespace ShopASP.Domain.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Pathronomic { get; set; }
     }
 }

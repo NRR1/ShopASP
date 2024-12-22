@@ -49,8 +49,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     //Админ зарегистрирован под:
     /*
-    UserName = admin@mail.ru
     Email = admin@mail.ru
+    UserName = admin@mail.ru
     Password = @dminPassword667
 
     Все эти данные находятся в файле DbInitializer
@@ -59,7 +59,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "Account/Login";
+    options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
@@ -104,6 +104,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Product}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

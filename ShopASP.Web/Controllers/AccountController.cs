@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 using ShopASP.Domain.Entities;
 using ShopASP.Web.Models;
 
@@ -39,19 +40,40 @@ namespace ShopASP.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Используем кастомный класс User
-                var user = new User { UserName = regModel.Login, Email = regModel.Email };
-                var result = await userManager.CreateAsync(user, regModel.Password);
+                var existingUserByLogin = await userManager.FindByNameAsync(regModel.Login);
+                var existingUserByEmail = await userManager.FindByEmailAsync(regModel.Email);
 
-                if (result.Succeeded)
+                if (existingUserByLogin != null)
                 {
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Product");
+                    ModelState.AddModelError(string.Empty, "Логин уже занят.");
                 }
-                else
+                if (existingUserByEmail != null)
                 {
-                    foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, "Email уже используется.");
+                }
+                if (existingUserByLogin == null && existingUserByEmail == null)
+                {
+                    User user = new User
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        UserName = regModel.Login,
+                        Email = regModel.Email,
+                        FirstName = regModel.Name,
+                        LastName = regModel.Surname,
+                        Pathronomic = regModel.Pathronomic
+                    };
+                    var result = await userManager.CreateAsync(user, regModel.Password);
+
+                    if (result.Succeeded)
+                    {
+                        await signInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToAction("Index", "Product");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
             }
@@ -72,6 +94,10 @@ namespace ShopASP.Web.Controllers
             {
                 // Используем кастомный класс User
                 var user = await userManager.FindByEmailAsync(logModel.Login);
+                if (user == null)
+                {
+                    user = await userManager.FindByNameAsync(logModel.Login);
+                }
                 if (user != null)
                 {
                     var result = await signInManager.PasswordSignInAsync(user, logModel.Password, logModel.RememberMe, lockoutOnFailure: false);

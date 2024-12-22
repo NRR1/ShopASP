@@ -15,6 +15,7 @@
     <div>
         <label>Отчество</label>
         <input asp-for="Pathronomic" />
+        <span asp-validation-for="Pathronomic"></span>
     </div>
     <div>
         <label>Почта</label>
@@ -22,7 +23,7 @@
         <span asp-validation-for="Email"></span>
     </div>
     <div>
-        <label>Логин</label>
+        <label>Логин(используется для входа далее)</label>
         <input asp-for="Login" />
         <span asp-validation-for="Login"></span>
     </div>

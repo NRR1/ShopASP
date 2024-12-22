@@ -4,7 +4,7 @@ namespace ShopASP.Web.Models
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Введите имя пользователя")]
+        [Required(ErrorMessage = "Введите логин")]
         public string Login { get; set; }
 
         [Required(ErrorMessage = "Введите пароль")]
