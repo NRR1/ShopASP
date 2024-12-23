@@ -52,7 +52,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     Email = admin@mail.ru
     UserName = admin@mail.ru
     Password = @dminPassword667
-
+    ради теста
     Все эти данные находятся в файле DbInitializer
      */
 });
