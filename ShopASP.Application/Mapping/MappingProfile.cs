@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using ShopASP.Application.DTO;
 using ShopASP.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShopASP.Application.Mapping
 {
@@ -22,12 +17,12 @@ namespace ShopASP.Application.Mapping
                 .ReverseMap();
 
             CreateMap<OrderProduct, OrderProductDTO>()
-                .ForMember(dest => dest.OrderProductId, opt => opt.MapFrom(src => src.ID))
-                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderID))
-                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductID))
-                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty))
-                .ForMember(dest => dest.ProductCost, opt => opt.MapFrom(src => src.Product != null ? src.Product.Cost : 0))
-                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+                .ForMember(dest => dest.dOrderProductId, opt => opt.MapFrom(src => src.ID))
+                .ForMember(dest => dest.dOrderId, opt => opt.MapFrom(src => src.OrderID))
+                .ForMember(dest => dest.dProductId, opt => opt.MapFrom(src => src.ProductID))
+                .ForMember(dest => dest.dProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty))
+                .ForMember(dest => dest.dProductCost, opt => opt.MapFrom(src => src.Product != null ? src.Product.Cost : 0))
+                .ForMember(dest => dest.dQuantity, opt => opt.MapFrom(src => src.Quantity))
                 .ReverseMap();
 
             CreateMap<Product, ProductDTO>()

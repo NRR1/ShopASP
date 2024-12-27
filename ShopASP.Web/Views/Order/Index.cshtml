@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ShopASP.Web.Models.OrderListViewModel>
+
+<h2>Product List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>UserID</th>
+            <th>OrderDate</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.UserID</td>
+                <td>@order.OrderDate</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@order.ID">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@order.ID">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@order.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Add New Product</a>

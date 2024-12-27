@@ -65,6 +65,8 @@ namespace ShopASP.Web.Controllers
 
                     if (result.Succeeded)
                     {
+                        await userManager.AddToRoleAsync(user, "Guest");
+                        HttpContext.Session.SetString("UserID", user.Id);
                         await signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToAction("Index", "Product");
                     }
@@ -103,11 +105,12 @@ namespace ShopASP.Web.Controllers
                     var result = await signInManager.PasswordSignInAsync(user, logModel.Password, logModel.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
-                        // Сохраняем роль в сессии
+                        HttpContext.Session.SetString("UserID", user.Id);
+
                         var role = await userManager.GetRolesAsync(user);
                         HttpContext.Session.SetString("UserRole", role.FirstOrDefault());
 
-                        // Перенаправляем на URL, если он есть, иначе на главную страницу
+
                         return RedirectToLocal(returnUrl);
                     }
                     else
