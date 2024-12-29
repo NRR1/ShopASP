@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopASP.Application.Interface;
@@ -8,17 +9,20 @@ using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
 using ShopASP.Infrastructure.Repositories;
 
-var builder = WebApplication.CreateBuilder(args);
-
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddAuthentication()
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/Privacy";
+        options.AccessDeniedPath = "/Account/Register";
     });
+builder.Services.AddDbContext<ShopASPDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CS"));
+});
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -35,26 +39,27 @@ builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ShopASPDBContext>()
-    .AddDefaultTokenProviders();    
+    .AddDefaultTokenProviders()
+    .AddSignInManager<SignInManager<User>>();
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireDigit = true;               //содержит хотя бы 1 цифру+
-    options.Password.RequiredLength = 8;                //минимальная длинна пароля +
-    options.Password.RequireNonAlphanumeric = true;     //требует спецсимвол +
-    options.Password.RequireUppercase = true;           //требует заглавную букву+
-    options.Password.RequireLowercase = true;           //требует строчную букву+
-    options.Password.RequiredUniqueChars = 1;           //Требует уникальный символ+
-    //Пример идеального пароля: @vdoshka931MMM
-
-
-    //Админ зарегистрирован под:
-    /*
-    Email = admin@mail.ru
-    UserName = admin@mail.ru
-    Password = @dminPassword667
-    Все эти данные находятся в файле DbInitializer
-     */
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;                   //1 number
+    options.Password.RequiredUniqueChars = 1;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    
+    
+    //options.Password.RequiredLength = 8;                    //min 8 symbols of password
+    //options.Password.RequireNonAlphanumeric = true;         //require unique symbol
+    //options.Password.RequireUppercase = true;               //require some 'A' or any uppercase symbol
+    //options.Password.RequireLowercase = true;               //require some 'a' or any lowercase symbol
+    //options.Password.RequiredUniqueChars = 1;               //require unique symbol
 });
+
+//@dminPassword667
+//цифра, мин 8 символов, уникальный символ, нижний  верхний регистр, не алфавитный символ
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -62,13 +67,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
-builder.Services.AddDbContext<ShopASPDBContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CS"));
-});
-builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShopASP.Application.DTO;
 using ShopASP.Application.Interface;
 using ShopASP.Web.Models;
@@ -12,13 +13,20 @@ namespace ShopASP.Web.Controllers
         {
             service = _service;
         }
+        
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             IEnumerable<ProductDTO> products = await service.GetAll();
             List<ProductListViewModel> vm = products.Select(dto => ProductListViewModel.FromDTO(dto)).ToList();
             return View(vm);
         }
+
+
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -35,9 +43,11 @@ namespace ShopASP.Web.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create() => View(new ProductViewModel());
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Name,Description,Cost,Quantity")] ProductViewModel vm)
@@ -51,6 +61,7 @@ namespace ShopASP.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -67,6 +78,7 @@ namespace ShopASP.Web.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Description,Cost,Quantity")] ProductViewModel vm)
@@ -83,6 +95,8 @@ namespace ShopASP.Web.Controllers
             }
             return View(vm);
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -99,6 +113,7 @@ namespace ShopASP.Web.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConf(int id)

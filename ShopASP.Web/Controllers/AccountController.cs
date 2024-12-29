@@ -98,7 +98,7 @@ namespace ShopASP.Web.Controllers
                 var user = await userManager.FindByEmailAsync(logModel.Login);
                 if (user == null)
                 {
-                    user = await userManager.FindByNameAsync(logModel.Login);
+                    user = await userManager.FindByNameAsync(logModel.Login);// == username == login
                 }
                 if (user != null)
                 {
@@ -109,9 +109,9 @@ namespace ShopASP.Web.Controllers
 
                         var role = await userManager.GetRolesAsync(user);
                         HttpContext.Session.SetString("UserRole", role.FirstOrDefault());
+                        await SignInAsync(user);
 
-
-                        return RedirectToLocal(returnUrl);
+                        return RedirectToAction("Index", "Product");
                     }
                     else
                     {
@@ -120,6 +120,10 @@ namespace ShopASP.Web.Controllers
                 }
             }
             return View(logModel);
+        }
+        private async Task SignInAsync(User user)
+        {
+            await signInManager.SignInAsync(user, isPersistent: false);
         }
 
         private IActionResult RedirectToLocal(string returnUrl)

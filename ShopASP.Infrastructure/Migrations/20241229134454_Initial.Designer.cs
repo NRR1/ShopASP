@@ -12,8 +12,8 @@ using ShopASP.Infrastructure.Data;
 namespace ShopASP.Infrastructure.Migrations
 {
     [DbContext(typeof(ShopASPDBContext))]
-    [Migration("20241222181849_Pathronomic")]
-    partial class Pathronomic
+    [Migration("20241229134454_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

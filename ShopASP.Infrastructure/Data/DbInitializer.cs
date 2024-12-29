@@ -9,37 +9,66 @@ namespace ShopASP.Infrastructure.Data
     {
         public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<User>>(); // Используем кастомный User
+            using var scope = serviceProvider.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             var logger = serviceProvider.GetRequiredService<ILogger<DbInitializer>>();
 
-            var roles = new[] { "Admin", "Moderator", "User" };
+            // Создание ролей
+            string[] roles = { "Admin", "User" };
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                 {
                     await roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
-
-            var user = await userManager.FindByEmailAsync("admin@mail.ru");
-            if (user == null)
-            {
-                user = new User
-                {
-                    UserName = "admin@mail.ru",
-                    Email = "admin@mail.ru"
-                };
-                var result = await userManager.CreateAsync(user, "@dminPassword667");
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "Admin");
-                    logger.LogInformation($"Пользователь {user.Email} успешно создан и назначена роль Admin");
+                    logger.LogInformation($"Роль {role} успешно создана");
                 }
                 else
                 {
-                    logger.LogError($"Не удалось создать пользователя admin@mail.ru. Ошибки: {string.Join(", ", result.Errors)}");
+                    logger.LogInformation($"Ошибка где-то в роли");
                 }
+            }
+
+            // Создание пользователя-администратора
+            string adminEmail = "admin@mail.ru";
+            string adminPassword = "@dminPASSWORD667";
+
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            if (adminUser == null)
+            {
+                adminUser = new User
+                {
+                    UserName = "Admin",
+                    Email = adminEmail,
+                    FirstName = "админ",
+                    LastName = "админ",
+                    Pathronomic = "админ",
+                    EmailConfirmed = true // Подтверждение email сразу
+                };
+
+                var result = await userManager.CreateAsync(adminUser, adminPassword);
+
+                if (result.Succeeded)
+                {
+                    // Назначаем роль "Admin"
+                    var addToRoleResult = await userManager.AddToRoleAsync(adminUser, "Admin");
+                    if (addToRoleResult.Succeeded)
+                    {
+                        logger.LogInformation($"Пользователь {adminEmail} успешно создан и назначена роль Admin.");
+                    }
+                    else
+                    {
+                        logger.LogError($"Не удалось назначить роль Admin пользователю {adminEmail}. Ошибки: {string.Join(", ", addToRoleResult.Errors)}");
+                    }
+                }
+                else
+                {
+                    logger.LogError($"Не удалось создать пользователя {adminEmail}. Ошибки: {string.Join(", ", result.Errors)}");
+                }
+            }
+            else
+            {
+                logger.LogInformation($"Пользователь с email {adminEmail} уже существует.");
             }
         }
     }

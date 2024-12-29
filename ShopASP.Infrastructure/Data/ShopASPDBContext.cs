@@ -5,7 +5,7 @@ using ShopASP.Domain.Entities;
 
 namespace ShopASP.Infrastructure.Data
 {
-    public class ShopASPDBContext : IdentityDbContext<User>
+    public class ShopASPDBContext : IdentityDbContext<User, IdentityRole, string>
     {
         public ShopASPDBContext(DbContextOptions<ShopASPDBContext> options) : base(options)
         {
