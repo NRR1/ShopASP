@@ -10,6 +10,7 @@ namespace ShopASP.Web.Models
         public string ProductName { get; set; }
         public decimal ProductCost { get; set; }
 
+
         public OrderProductDTO ToDTO()
         {
             return new OrderProductDTO
