@@ -22,7 +22,7 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> Index()
         {
             IEnumerable<OrderDTO> orders = await orderService.GetAll();
-            var vm = orders.Select(dto => OrderListViewModel.FromDTO(dto)).ToList();
+            List<OrderListViewModel> vm = orders.Select(dto => OrderListViewModel.FromDTO(dto)).ToList();    
             return View(vm);
         }
 
@@ -57,7 +57,7 @@ namespace ShopASP.Web.Controllers
             var vm = new CreateOrderViewModel
             {
 
-            }
+            };
         }
 
         [HttpPost]

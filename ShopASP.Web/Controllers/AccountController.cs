@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using ShopASP.Domain.Entities;
 using ShopASP.Web.Models;
 
