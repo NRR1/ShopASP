@@ -22,7 +22,14 @@ namespace ShopASP.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
             IEnumerable<ProductDTO> products = await service.GetAll();
-            List<ProductListViewModel> vm = products.Select(dto => ProductListViewModel.FromDTO(dto)).ToList();
+            IEnumerable<ProductViewModel> vm = products.Select(product => new ProductViewModel
+            {
+                ID = product.pdID,
+                Name = product.pdName,
+                Description = product.pdDescription,
+                Cost = product.pdCost,
+                Quantity = product.pdQuantity,
+            });
             return View(vm);
         }
 
@@ -39,7 +46,14 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            ProductViewModel vm = ProductViewModel.FromDTO(product);
+            ProductViewModel vm = new ProductViewModel
+            {
+                ID = product.pdID,
+                Name = product.pdName,
+                Description = product.pdDescription,
+                Cost = product.pdCost,
+                Quantity = product.pdQuantity,
+            };
             return View(vm);
         }
 
@@ -56,7 +70,14 @@ namespace ShopASP.Web.Controllers
             {
                 return View(vm);
             }
-            ProductDTO product = vm.ToDTO();
+            ProductDTO product = new ProductDTO()
+            {
+                pdID = vm.ID,
+                pdName = vm.Name,
+                pdDescription = vm.Description,
+                pdCost = vm.Cost,
+                pdQuantity = vm.Quantity,
+            };
             await service.Create(product);
             return RedirectToAction(nameof(Index));
         }
@@ -74,7 +95,14 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            ProductViewModel vm = ProductViewModel.FromDTO(product);
+            ProductViewModel vm = new ProductViewModel
+            {
+                ID = product.pdID,
+                Name = product.pdName,
+                Description = product.pdDescription,
+                Cost = product.pdCost,
+                Quantity = product.pdQuantity
+            };
             return View(vm);
         }
 
@@ -89,7 +117,14 @@ namespace ShopASP.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                ProductDTO dto = vm.ToDTO();
+                ProductDTO dto = new ProductDTO
+                {
+                    pdID = vm.ID,
+                    pdName = vm.Name,
+                    pdDescription = vm.Description,
+                    pdCost = vm.Cost,
+                    pdQuantity = vm.Quantity
+                };
                 await service.Update(dto);
                 return RedirectToAction(nameof(Index));
             }
@@ -109,7 +144,14 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            ProductViewModel vm = ProductViewModel.FromDTO(product);
+            ProductViewModel vm = new ProductViewModel
+            {
+                ID = product.pdID,
+                Name = product.pdName,
+                Description = product.pdDescription,
+                Cost = product.pdCost,
+                Quantity = product.pdQuantity
+            };
             return View(vm);
         }
 
