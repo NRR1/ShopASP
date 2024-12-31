@@ -137,6 +137,48 @@ namespace ShopASP.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            if (TempData["ResetToken"] == null || TempData["Username"] == null)
+            {
+                return RedirectToAction("ForgotPassword");
+            }
+
+            ViewBag.Username = TempData["Username"];
+            ViewBag.Token = TempData["ResetToken"];
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            // Найти пользователя по имени пользователя
+            var user = await userManager.FindByNameAsync(viewModel.Login);
+            if (user == null)
+            {
+                // Не раскрывать, существует ли пользователь
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+
+            // Генерация токена для сброса пароля
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Храните токен где-то (например, временно в TempData или базе данных)
+            TempData["ResetToken"] = token;
+            TempData["Username"] = viewModel.Login;
+
+            return RedirectToAction("ResetPassword");
+        }
+
+
+
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
