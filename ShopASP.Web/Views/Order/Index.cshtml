@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShopASP.Web.Models.OrderListViewModel>
+﻿@model IEnumerable<ShopASP.Web.Models.OrderViewModel>
 
 <h2>Product List</h2>
 
@@ -16,9 +16,9 @@
                 <td>@order.UserID</td>
                 <td>@order.OrderDate</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@order.ID">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@order.ID">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@order.ID">Delete</a>
+                    <a asp-action="Details" asp-route-id="@order.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@order.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@order.Id">Delete</a>
                 </td>
             </tr>
         }
