@@ -22,8 +22,18 @@ namespace ShopASP.Web.Controllers
         public async Task<IActionResult> Index()
         {
             IEnumerable<OrderDTO> orders = await orderService.GetAll();
-            List<OrderListViewModel> vm = orders.Select(dto => OrderListViewModel.FromDTO(dto)).ToList();    
-            return View(vm);
+            var products = await productService.GetAll();
+            ProductViewModel VMproduct = new ProductViewModel();
+            IEnumerable<OrderViewModel> model = orders.Select(order => new OrderViewModel
+            {
+                Id = order.dOrderID,
+                UserID = order.dUserID,
+                OrderDate = order.dOrderDate,
+                TotalAmount = order.dTotalAmount,
+                ProductName = VMproduct.Name,
+                ProductCost = VMproduct.Cost
+            });
+            return View(model);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -32,63 +42,42 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            var order = await orderService.GetByID(id);
+            OrderDTO? order = await orderService.GetByID(id);
             if(order == null)
             {
                 return NotFound();
             }
-            var vm = OrderViewModel.FromDTO(order);
-            return View(vm);
+            OrderViewModel model = new OrderViewModel
+            {
+                Id = order.dOrderID,
+                UserID = order.dUserID,
+                OrderDate = order.dOrderDate,
+                TotalAmount = order.dTotalAmount
+            };
+            return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            var products = await productService.GetAll();
-            var productVM = products.Select(p => new ProductViewModel
-            {
-                ID = p.pdID,
-                Name = p.pdName,
-                Description = p.pdDescription,
-                Cost = p.pdCost,
-                Quantity = p.pdQuantity
-            }).ToList();
-
-            var vm = new CreateOrderViewModel
-            {
-
-            };
-        }
+        public IActionResult Create() => View(new OrderViewModel());
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderID,UserID,OrderDate,TotalAmount")] CreateOrderViewModel model)
+        public async Task<IActionResult> Create([Bind("OrderID,UserID,OrderDate,TotalAmount")] OrderViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Получаем пользователя, который создает заказ
-                var user = await userManager.GetUserAsync(User);
-
-                // Рассчитываем общую стоимость заказа
-                decimal totalAmount = model.OrderProducts.Sum(p => p.Quantity * p.Product.Cost);
-
-                // Создаем новый заказ
-                var order = new Order
-                {
-                    UserId = user.Id,
-                    OrderDate = DateTime.Now,
-                    TotalAmount = totalAmount,
-                    OrderProducts = model.OrderProducts.Select(op => new OrderProduct
-                    {
-                        ProductID = op.Product.ID,
-                        Quantity = op.Quantity
-                    }).ToList()
-                };
-
-                await service.Create(order);
-
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
+            User? user = await userManager.GetUserAsync(User);
+            OrderDTO order = new OrderDTO()
+            {
+                dOrderID = model.Id,
+                dUserID = user.Id,
+                dOrderDate = model.OrderDate,
+                dTotalAmount = model.TotalAmount
+            };
+            await orderService.Create(order);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -98,12 +87,19 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            var order = await orderService.GetByID(id);
+            OrderDTO order = await orderService.GetByID(id);
+            User? user = await userManager.GetUserAsync(User);
             if(order == null)
             {
                 return NotFound();
             }
-            OrderViewModel vm = OrderViewModel.FromDTO(order);
+            OrderViewModel vm = new OrderViewModel
+            {
+                Id = order.dOrderID,
+                UserID = user.Id,
+                OrderDate = order.dOrderDate,
+                TotalAmount = order.dTotalAmount
+            };
             return View(vm);
         }
 
@@ -111,14 +107,21 @@ namespace ShopASP.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderID,UserID,OrderDate,TotalAmount")] OrderViewModel model)
         {
-            if(id != model.OrderID)
+            if(id != model.Id)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                OrderDTO dto = model.ToDTO();
-                await orderService.Update(dto);
+                User? user = await userManager.GetUserAsync(User);
+                OrderDTO order = new OrderDTO
+                {
+                    dOrderID = model.Id,
+                    dUserID = user.Id,
+                    dOrderDate = model.OrderDate,
+                    dTotalAmount = model.TotalAmount
+                };
+                await orderService.Update(order);
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -131,13 +134,20 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            var order = await orderService.GetByID(id);
+            OrderDTO order = await orderService.GetByID(id);
+            User? user = await userManager.GetUserAsync(User);
             if(order == null)
             {
                 return NotFound();
             }
-            OrderViewModel model = OrderViewModel.FromDTO(order);
-            return View(model);
+            OrderViewModel vm = new OrderViewModel
+            {
+                Id = order.dOrderID,
+                UserID = user.Id,
+                OrderDate = order.dOrderDate,
+                TotalAmount = order.dTotalAmount
+            };
+            return View(vm);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -148,8 +158,7 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-
-            var order = await orderService.GetByID(id);
+            OrderDTO order = await orderService.GetByID(id);
             if(order == null)
             {
                 return NotFound();
