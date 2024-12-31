@@ -64,10 +64,9 @@ namespace ShopASP.Web.Controllers
 
                     if (result.Succeeded)
                     {
-                        await userManager.AddToRoleAsync(user, "Guest");
+                        await userManager.AddToRoleAsync(user, "User");
                         HttpContext.Session.SetString("UserID", user.Id);
                         await signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToAction("Index", "Product");
                     }
                     else
                     {
@@ -77,6 +76,7 @@ namespace ShopASP.Web.Controllers
                         }
                     }
                 }
+                return RedirectToAction("Index", "Product");
             }
             return View(regModel);
         }
