@@ -39,8 +39,8 @@ namespace ShopASP.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Используем кастомный класс User
-                var existingUserByLogin = await userManager.FindByNameAsync(regModel.Login);
-                var existingUserByEmail = await userManager.FindByEmailAsync(regModel.Email);
+                User? existingUserByLogin = await userManager.FindByNameAsync(regModel.Login);
+                User? existingUserByEmail = await userManager.FindByEmailAsync(regModel.Email);
 
                 if (existingUserByLogin != null)
                 {
@@ -60,7 +60,7 @@ namespace ShopASP.Web.Controllers
                         LastName = regModel.Surname,
                         Pathronomic = regModel.Pathronomic
                     };
-                    var result = await userManager.CreateAsync(user, regModel.Password);
+                    IdentityResult? result = await userManager.CreateAsync(user, regModel.Password);
 
                     if (result.Succeeded)
                     {
@@ -71,7 +71,7 @@ namespace ShopASP.Web.Controllers
                     }
                     else
                     {
-                        foreach (var error in result.Errors)
+                        foreach (IdentityError error in result.Errors)
                         {
                             ModelState.AddModelError(string.Empty, error.Description);
                         }
@@ -83,7 +83,7 @@ namespace ShopASP.Web.Controllers
 
         public IActionResult Login()
         {
-            var lVM = new LoginViewModel();
+            LoginViewModel lVM = new LoginViewModel();
             return View(lVM);
         }
 
@@ -94,7 +94,7 @@ namespace ShopASP.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Используем кастомный класс User
-                var user = await userManager.FindByEmailAsync(logModel.Login);
+                User? user = await userManager.FindByEmailAsync(logModel.Login);
                 if (user == null)
                 {
                     user = await userManager.FindByNameAsync(logModel.Login);// == username == login
