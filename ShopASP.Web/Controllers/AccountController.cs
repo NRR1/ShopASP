@@ -154,29 +154,6 @@ namespace ShopASP.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
         {
-            //if(!ModelState.IsValid)
-            //{
-            //    return View(viewModel);
-            //}
-
-            //// Найти пользователя по имени пользователя
-            //var user = await userManager.FindByNameAsync(viewModel.Login);
-            //if (user == null)
-            //{
-            //    // Не раскрывать, существует ли пользователь
-            //    return RedirectToAction("ForgotPasswordConfirmation");
-            //}
-
-
-            //// Генерация токена для сброса пароля
-            //var token = await userManager.GeneratePasswordResetTokenAsync(user);
-
-            //// Храните токен где-то (например, временно в TempData или базе данных)
-            //TempData["ResetToken"] = token;
-            //TempData["Username"] = viewModel.Login;
-
-            //return RedirectToAction("ResetPassword");
-
             if(!ModelState.IsValid)
             {
                 return View(viewModel);

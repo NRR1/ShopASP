@@ -10,6 +10,7 @@ namespace ShopASP.Application.Interface
 {
     public interface IProductService : GenericInterface<ProductDTO>
     {
+        Task<IEnumerable<ProductDTO>> GetAll();
         Task Update(ProductDTO productDTO);
     }
 }

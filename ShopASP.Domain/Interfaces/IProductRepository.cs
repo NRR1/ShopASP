@@ -9,6 +9,7 @@ namespace ShopASP.Domain.Interfaces
 {
     public interface IProductRepository : GenericInterface<Product>
     {
+        Task<IEnumerable<Product>> GetAll();
         Task Update(Product product);
     }
 }

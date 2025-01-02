@@ -27,6 +27,9 @@
                         <a asp-action="Edit" asp-route-id="@product.ID">Edit</a>
                         <a asp-action="Delete" asp-route-id="@product.ID">Delete</a>
                     }
+                    else if(Context.Session.GetString("UserRole") == "Guest"){
+                        <a asp-action="CreateOrder" asp-route-id="@product.ID">Заказать</a>
+                    }
                 </td>
             </tr>
         }
@@ -35,5 +38,5 @@
 
 @if(Context.Session.GetString("UserRole") == "Admin")
 {
-    <a asp-action="Create" class="btn btn-primary">Add New Product</a>
+    <a asp-action="CreateProduct" class="btn btn-primary">Add New Product</a>
 }

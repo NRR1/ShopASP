@@ -8,6 +8,7 @@ namespace ShopASP.Domain.Interfaces
 {
     public interface IOrderRepository : GenericInterface<Order>
     {
+        Task<IEnumerable<Order>> GetAll();
         Task Update(Order order);
     }
 }

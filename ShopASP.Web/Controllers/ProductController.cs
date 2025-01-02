@@ -2,16 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopASP.Application.DTO;
 using ShopASP.Application.Interface;
+using ShopASP.Domain.Entities;
 using ShopASP.Web.Models;
 
 namespace ShopASP.Web.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductService service;
-        public ProductController(IProductService _service)
+        private readonly IProductService productservice;
+        private readonly IOrderService orderservice;
+        public ProductController(IProductService _productservice, IOrderService _orderservice)
         {
-            service = _service;
+            productservice = _productservice;
+            orderservice = _orderservice;
         }
         
         [HttpGet]
@@ -21,7 +24,7 @@ namespace ShopASP.Web.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            IEnumerable<ProductDTO> products = await service.GetAll();
+            IEnumerable<ProductDTO> products = await productservice.GetAll();
             IEnumerable<ProductViewModel> vm = products.Select(product => new ProductViewModel
             {
                 ID = product.pdID,
@@ -29,7 +32,7 @@ namespace ShopASP.Web.Controllers
                 Description = product.pdDescription,
                 Cost = product.pdCost,
                 Quantity = product.pdQuantity,
-            });
+            }).ToList();
             return View(vm);
         }
 
@@ -41,7 +44,7 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            ProductDTO product = await service.GetByID(id);
+            ProductDTO product = await productservice.GetByID(id);
             if(product == null)
             {
                 return NotFound();
@@ -59,12 +62,12 @@ namespace ShopASP.Web.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult Create() => View(new ProductViewModel());
+        public IActionResult CreateProduct() => View(new ProductViewModel());
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Description,Cost,Quantity")] ProductViewModel vm)
+        public async Task<IActionResult> CreateProduct([Bind("ID,Name,Description,Cost,Quantity")] ProductViewModel vm)
         {
             if(!ModelState.IsValid)
             {
@@ -78,8 +81,68 @@ namespace ShopASP.Web.Controllers
                 pdCost = vm.Cost,
                 pdQuantity = vm.Quantity,
             };
-            await service.Create(product);
+            await productservice.Create(product);
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Guest")]
+        [HttpGet]
+        public async Task<IActionResult> CreateOrder()
+        {
+            var orderViewModel = new OrderViewModel
+            {
+                OrderDate = DateTime.Now,
+                Products = new List<OrderProductViewModel>()
+            };
+
+            // Получаем все доступные продукты для выбора
+            IEnumerable<ProductDTO> products = await productservice.GetAll();
+            foreach (var product in products)
+            {
+                orderViewModel.Products.Add(new OrderProductViewModel
+                {
+                    ProductID = product.pdID,
+                    ProductName = product.pdName,
+                    ProductCost = product.pdCost,
+                    Quantity = 1  // Поставим минимальное количество по умолчанию
+                });
+            }
+
+            return View(orderViewModel);
+        }
+
+        [Authorize(Roles = "Guest")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateOrder(OrderViewModel orderModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(orderModel);
+            }
+
+            // Создаем заказ на основе переданных данных
+            var newOrder = new OrderDTO
+            {
+                dUserID = orderModel.UserID,
+                dOrderDate = orderModel.OrderDate,
+                dTotalAmount = orderModel.TotalAmount,
+            };
+
+            // Добавляем продукты в заказ
+            foreach (var product in orderModel.Products)
+            {
+                newOrder.dOrderProducts.Add(new OrderProductDTO
+                {
+                    dProductId = product.ProductID,
+                    dQuantity = product.Quantity
+                });
+            }
+
+            // Создаем заказ с помощью сервиса
+            await orderservice.Create(newOrder);
+
+            return RedirectToAction("OrderConfirmation");
         }
 
         [Authorize(Roles = "Admin")]
@@ -90,7 +153,7 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            ProductDTO product = await service.GetByID(id);
+            ProductDTO product = await productservice.GetByID(id);
             if(product == null)
             {
                 return NotFound();
@@ -125,7 +188,7 @@ namespace ShopASP.Web.Controllers
                     pdCost = vm.Cost,
                     pdQuantity = vm.Quantity
                 };
-                await service.Update(dto);
+                await productservice.Update(dto);
                 return RedirectToAction(nameof(Index));
             }
             return View(vm);
@@ -139,7 +202,7 @@ namespace ShopASP.Web.Controllers
             {
                 return NotFound();
             }
-            ProductDTO product = await service.GetByID(id);
+            ProductDTO product = await productservice.GetByID(id);
             if(product == null)
             {
                 return NotFound();
@@ -160,10 +223,10 @@ namespace ShopASP.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConf(int id)
         {
-            ProductDTO product = await service.GetByID(id);
+            ProductDTO product = await productservice.GetByID(id);
             if(product != null)
             {
-                await service.Delete(id);
+                await productservice.Delete(id);
             }
             return RedirectToAction(nameof(Index));
         }

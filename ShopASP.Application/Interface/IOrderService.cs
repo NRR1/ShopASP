@@ -10,6 +10,7 @@ namespace ShopASP.Application.Interface
 {
     public interface IOrderService : GenericInterface<OrderDTO>
     {
+        Task<IEnumerable<OrderDTO>> GetAll();
         Task Update(OrderDTO orderDTO);
     }
 }

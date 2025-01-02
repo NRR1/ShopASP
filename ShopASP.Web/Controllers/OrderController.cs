@@ -1,170 +1,229 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShopASP.Application.DTO;
 using ShopASP.Application.Interface;
+using ShopASP.Infrastructure.Repositories;
 using ShopASP.Domain.Entities;
+using ShopASP.Domain.Interfaces;
 using ShopASP.Web.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ShopASP.Web.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IOrderService orderService;
-        private readonly IProductService productService;
-        private readonly UserManager<User> userManager;
-        public OrderController(IOrderService _orderService, IProductService _productService, UserManager<User> _userManager)
+        private readonly IOrderRepository _orderRepository;
+
+        public OrderController(IOrderRepository orderRepository)
         {
-            orderService = _orderService;
-            productService = _productService;
-            userManager = _userManager;
+            _orderRepository = orderRepository;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            IEnumerable<OrderDTO> orders = await orderService.GetAll();
-            var products = await productService.GetAll();
-            ProductViewModel VMproduct = new ProductViewModel();
-            IEnumerable<OrderViewModel> model = orders.Select(order => new OrderViewModel
-            {
-                Id = order.dOrderID,
-                UserID = order.dUserID,
-                OrderDate = order.dOrderDate,
-                TotalAmount = order.dTotalAmount,
-                ProductName = VMproduct.Name,
-                ProductCost = VMproduct.Cost
-            });
-            return View(model);
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            if(id == null)
-            {
-                return NotFound();
-            }
-            OrderDTO? order = await orderService.GetByID(id);
-            if(order == null)
-            {
-                return NotFound();
-            }
-            OrderViewModel model = new OrderViewModel
-            {
-                Id = order.dOrderID,
-                UserID = order.dUserID,
-                OrderDate = order.dOrderDate,
-                TotalAmount = order.dTotalAmount
-            };
-            return View(model);
-        }
-
+        
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult Create() => View(new OrderViewModel());
+        public async Task<IActionResult> GetAll()
+        {
+            var orders = await _orderRepository.GetAll();
+            var orderViewModels = orders.Select(order => new OrderViewModel
+            {
+                OrderID = order.ID,
+                UserID = order.UserId,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
+                Products = order.OrderProducts.Select(op => new OrderProductViewModel
+                {
+                    ProductName = op.Product.Name,
+                    ProductCost = op.Product.Cost,
+                    Quantity = op.Quantity
+                }).ToList()
+            }).ToList();
 
+            return View(orderViewModels); // Отправляем данные в представление
+        }
+
+        #region GetByID - Получить заказ по ID
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetByID(int id)
+        {
+            var order = await _orderRepository.GetByID(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var orderViewModel = new OrderViewModel
+            {
+                OrderID = order.ID,
+                UserID = order.UserId,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
+                Products = order.OrderProducts.Select(op => new OrderProductViewModel
+                {
+                    ProductName = op.Product.Name,
+                    ProductCost = op.Product.Cost,
+                    Quantity = op.Quantity
+                }).ToList()
+            };
+
+            return View(orderViewModel);
+        }
+        #endregion
+
+        #region Create - Создание нового заказа
+        [Authorize(Roles = "Guest")]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var orderViewModel = new OrderViewModel
+            {
+                UserID = User.Identity.Name,
+                OrderDate = DateTime.Now,
+                Products = new List<OrderProductViewModel>()
+            };
+            return View(orderViewModel);
+        }
+
+        [Authorize(Roles = "Guest")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderID,UserID,OrderDate,TotalAmount")] OrderViewModel model)
+        public async Task<IActionResult> Create(OrderViewModel orderModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(orderModel);
             }
-            User? user = await userManager.GetUserAsync(User);
-            OrderDTO order = new OrderDTO()
-            {
-                dOrderID = model.Id,
-                dUserID = user.Id,
-                dOrderDate = model.OrderDate,
-                dTotalAmount = model.TotalAmount
-            };
-            await orderService.Create(order);
-            return RedirectToAction(nameof(Index));
-        }
 
+            var totalAmount = orderModel.Products.Sum(p => p.TotalCost);
+            orderModel.TotalAmount = (int)totalAmount;
+
+            var order = new Order
+            {
+                UserId = orderModel.UserID,
+                OrderDate = orderModel.OrderDate,
+                TotalAmount = orderModel.TotalAmount
+            };
+
+            foreach (var product in orderModel.Products)
+            {
+                var orderProduct = new OrderProduct
+                {
+                    Order = order,
+                    ProductID = product.ProductID,
+                    Quantity = product.Quantity
+                };
+
+                // Здесь мы добавляем связанный продукт к заказу.
+                order.OrderProducts.Add(orderProduct);
+            }
+
+            await _orderRepository.Create(order);
+
+            TempData["SuccessMessage"] = "Ваш заказ был успешно создан!";
+            return RedirectToAction("OrderConfirmation");
+        }
+        #endregion
+
+        #region Update - Обновление существующего заказа
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Update(int id)
         {
-            if(id == null)
+            var order = await _orderRepository.GetByID(id);
+
+            if (order == null)
             {
                 return NotFound();
             }
-            OrderDTO order = await orderService.GetByID(id);
-            User? user = await userManager.GetUserAsync(User);
-            if(order == null)
+
+            var orderViewModel = new OrderViewModel
             {
-                return NotFound();
-            }
-            OrderViewModel vm = new OrderViewModel
-            {
-                Id = order.dOrderID,
-                UserID = user.Id,
-                OrderDate = order.dOrderDate,
-                TotalAmount = order.dTotalAmount
+                OrderID = order.ID,
+                UserID = order.UserId,
+                OrderDate = order.OrderDate,
+                TotalAmount = order.TotalAmount,
+                Products = order.OrderProducts.Select(op => new OrderProductViewModel
+                {
+                    ProductName = op.Product.Name,
+                    ProductCost = op.Product.Cost,
+                    Quantity = op.Quantity
+                }).ToList()
             };
-            return View(vm);
+
+            return View(orderViewModel);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderID,UserID,OrderDate,TotalAmount")] OrderViewModel model)
+        public async Task<IActionResult> Update(int id, OrderViewModel orderModel)
         {
-            if(id != model.Id)
+            if (id != orderModel.OrderID)
             {
                 return NotFound();
             }
-            if (ModelState.IsValid)
-            {
-                User? user = await userManager.GetUserAsync(User);
-                OrderDTO order = new OrderDTO
-                {
-                    dOrderID = model.Id,
-                    dUserID = user.Id,
-                    dOrderDate = model.OrderDate,
-                    dTotalAmount = model.TotalAmount
-                };
-                await orderService.Update(order);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(model);
-        }
 
+            if (!ModelState.IsValid)
+            {
+                return View(orderModel);
+            }
+
+            var order = await _orderRepository.GetByID(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            order.OrderDate = orderModel.OrderDate;
+            order.TotalAmount = orderModel.TotalAmount;
+
+            // Удаляем старые продукты и добавляем новые
+            order.OrderProducts.Clear();
+            foreach (var product in orderModel.Products)
+            {
+                var orderProduct = new OrderProduct
+                {
+                    Order = order,
+                    ProductID = product.ProductID,
+                    Quantity = product.Quantity
+                };
+
+                order.OrderProducts.Add(orderProduct);
+            }
+
+            await _orderRepository.Update(order);
+
+            TempData["SuccessMessage"] = "Заказ был обновлен!";
+            return RedirectToAction("GetByID", new { id = order.ID });
+        }
+        #endregion
+
+        #region Delete - Удаление заказа
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            if(id == null)
+            var order = await _orderRepository.GetByID(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            OrderDTO order = await orderService.GetByID(id);
-            User? user = await userManager.GetUserAsync(User);
-            if(order == null)
-            {
-                return NotFound();
-            }
-            OrderViewModel vm = new OrderViewModel
-            {
-                Id = order.dOrderID,
-                UserID = user.Id,
-                OrderDate = order.dOrderDate,
-                TotalAmount = order.dTotalAmount
-            };
-            return View(vm);
+
+            return View(new OrderViewModel { OrderID = order.ID });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConf(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if(id == null)
-            {
-                return NotFound();
-            }
-            OrderDTO order = await orderService.GetByID(id);
-            if(order == null)
-            {
-                return NotFound();
-            }
-            await orderService.Delete(id);
-            return RedirectToAction(nameof(Index));
+            await _orderRepository.Delete(id);
+            TempData["SuccessMessage"] = "Заказ был удален!";
+            return RedirectToAction("GetAll");
         }
+        #endregion
     }
 }

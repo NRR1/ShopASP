@@ -18,17 +18,21 @@ namespace ShopASP.Infrastructure.Repositories
         }
         public async Task<IEnumerable<Order>> GetAll()
         {
-            List<Order> orders = await db.Orders.ToListAsync();
-            return orders;
+            return await db.Orders.Include(o => o.OrderProducts)
+                                  .ThenInclude(op => op.Product)
+                                  .ToListAsync();
         }
         public async Task<Order> GetByID(int id)
         {
-            Order order = await db.Orders.FindAsync(id);
+            Order? order = await db.Orders
+                                         .Include(o => o.OrderProducts)
+                                         .ThenInclude(op => op.Product)
+                                         .FirstOrDefaultAsync(x => x.ID == id);
             return order;
         }
         public async Task Create(Order entity)
         {
-            db.Orders.Add(entity);
+            await db.Orders.AddAsync(entity);
             await db.SaveChangesAsync();
         }
         public async Task Update(Order order)

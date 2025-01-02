@@ -8,7 +8,6 @@ namespace ShopASP.Domain.Interfaces
 {
     public interface GenericInterface<T> where T : class
     {
-        Task<IEnumerable<T>> GetAll();
         Task<T> GetByID(int id);
         Task Create(T entity);
         Task Delete(int id);
