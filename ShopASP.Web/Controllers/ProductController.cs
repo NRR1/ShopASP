@@ -85,65 +85,61 @@ namespace ShopASP.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Guest")]
-        [HttpGet]
-        public async Task<IActionResult> CreateOrder()
-        {
-            var orderViewModel = new OrderViewModel
-            {
-                OrderDate = DateTime.Now,
-                Products = new List<OrderProductViewModel>()
-            };
 
-            // Получаем все доступные продукты для выбора
-            IEnumerable<ProductDTO> products = await productservice.GetAll();
-            foreach (var product in products)
-            {
-                orderViewModel.Products.Add(new OrderProductViewModel
-                {
-                    ProductID = product.pdID,
-                    ProductName = product.pdName,
-                    ProductCost = product.pdCost,
-                    Quantity = 1  // Поставим минимальное количество по умолчанию
-                });
-            }
+        // Эта часть не работает
 
-            return View(orderViewModel);
-        }
 
-        [Authorize(Roles = "Guest")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateOrder(OrderViewModel orderModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(orderModel);
-            }
+        //[HttpGet]
+        //public async Task<IActionResult> CreateOrder()
+        //{
+        //    // Получаем информацию о продукте по ID
+        //    ProductDTO product = await productservice.GetByID(id);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            // Создаем заказ на основе переданных данных
-            var newOrder = new OrderDTO
-            {
-                dUserID = orderModel.UserID,
-                dOrderDate = orderModel.OrderDate,
-                dTotalAmount = orderModel.TotalAmount,
-            };
+        //    // Создаем модель для представления
+        //    var orderProductViewModel = new OrderProductViewModel
+        //    {
+        //        ProductID = product.pdID,
+        //        ProductName = product.pdName,
+        //        ProductCost = product.pdCost,
+        //        Quantity = 1 // Минимальное количество
+        //    };
 
-            // Добавляем продукты в заказ
-            foreach (var product in orderModel.Products)
-            {
-                newOrder.dOrderProducts.Add(new OrderProductDTO
-                {
-                    dProductId = product.ProductID,
-                    dQuantity = product.Quantity
-                });
-            }
+        //    return View(orderProductViewModel);
+        //}
 
-            // Создаем заказ с помощью сервиса
-            await orderservice.Create(newOrder);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateOrder(OrderProductViewModel OPVM)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(OPVM); // Повторно показать форму
+        //    }
 
-            return RedirectToAction("OrderConfirmation");
-        }
+        //    // Создание нового заказа
+        //    var newOrder = new OrderDTO
+        //    {
+        //        dUserID = int.Parse(User.Identity.Name), // ID текущего пользователя
+        //        dOrderDate = DateTime.Now,
+        //        dTotalAmount = OPVM.ProductCost * OPVM.Quantity,
+        //    };
+
+        //    // Добавляем продукт в заказ
+        //    newOrder.dOrderProducts.Add(new OrderProduct
+        //    {
+        //        ProductID = OPVM.ProductID,
+        //        Quantity = OPVM.Quantity
+        //    });
+
+        //    // Сохранение заказа
+        //    await orderservice.Create(newOrder);
+
+        //    return RedirectToAction("Index", "Product"); // Перенаправление на список продуктов
+        //}
 
         [Authorize(Roles = "Admin")]
         [HttpGet]

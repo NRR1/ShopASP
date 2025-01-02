@@ -22,13 +22,14 @@
                 <td>@product.Quantity</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@product.ID">Details</a>
-                    @if(Context.Session.GetString("UserRole") == "Admin")
+                    @if (Context.Session.GetString("UserRole") == "Admin")
                     {
                         <a asp-action="Edit" asp-route-id="@product.ID">Edit</a>
                         <a asp-action="Delete" asp-route-id="@product.ID">Delete</a>
                     }
-                    else if(Context.Session.GetString("UserRole") == "Guest"){
-                        <a asp-action="CreateOrder" asp-route-id="@product.ID">Заказать</a>
+                    else
+                    {
+                        <a asp-action="CreateOrder" asp-route-id="@product.ID">Заказать товар</a>
                     }
                 </td>
             </tr>

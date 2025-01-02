@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShopASP.Application.Interface;
-using ShopASP.Infrastructure.Repositories;
 using ShopASP.Domain.Entities;
 using ShopASP.Domain.Interfaces;
 using ShopASP.Web.Models;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShopASP.Web.Controllers
 {
@@ -39,10 +35,9 @@ namespace ShopASP.Web.Controllers
                 }).ToList()
             }).ToList();
 
-            return View(orderViewModels); // Отправляем данные в представление
+            return View(orderViewModels);
         }
 
-        #region GetByID - Получить заказ по ID
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetByID(int id)
@@ -70,10 +65,7 @@ namespace ShopASP.Web.Controllers
 
             return View(orderViewModel);
         }
-        #endregion
-
-        #region Create - Создание нового заказа
-        [Authorize(Roles = "Guest")]
+        
         [HttpGet]
         public IActionResult Create()
         {
@@ -86,7 +78,6 @@ namespace ShopASP.Web.Controllers
             return View(orderViewModel);
         }
 
-        [Authorize(Roles = "Guest")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderViewModel orderModel)
@@ -115,18 +106,14 @@ namespace ShopASP.Web.Controllers
                     Quantity = product.Quantity
                 };
 
-                // Здесь мы добавляем связанный продукт к заказу.
                 order.OrderProducts.Add(orderProduct);
             }
 
             await _orderRepository.Create(order);
 
-            TempData["SuccessMessage"] = "Ваш заказ был успешно создан!";
             return RedirectToAction("OrderConfirmation");
         }
-        #endregion
 
-        #region Update - Обновление существующего заказа
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Update(int id)
@@ -180,7 +167,6 @@ namespace ShopASP.Web.Controllers
             order.OrderDate = orderModel.OrderDate;
             order.TotalAmount = orderModel.TotalAmount;
 
-            // Удаляем старые продукты и добавляем новые
             order.OrderProducts.Clear();
             foreach (var product in orderModel.Products)
             {
@@ -199,9 +185,7 @@ namespace ShopASP.Web.Controllers
             TempData["SuccessMessage"] = "Заказ был обновлен!";
             return RedirectToAction("GetByID", new { id = order.ID });
         }
-        #endregion
 
-        #region Delete - Удаление заказа
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
@@ -224,6 +208,5 @@ namespace ShopASP.Web.Controllers
             TempData["SuccessMessage"] = "Заказ был удален!";
             return RedirectToAction("GetAll");
         }
-        #endregion
     }
 }
