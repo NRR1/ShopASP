@@ -85,61 +85,100 @@ namespace ShopASP.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CreateOrder(int id)
+        {
+            // Получаем информацию о продукте по ID
+            ProductDTO product = await productservice.GetByID(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-        // Эта часть не работает
+            // Создаем модель для представления
+            var orderProductViewModel = new OrderProductViewModel
+            {
+                ProductID = product.pdID,
+                ProductName = product.pdName,
+                ProductCost = product.pdCost,
+                Quantity = 1 // Минимальное количество
+            };
 
+            return View(orderProductViewModel);
+        }
 
-        //[HttpGet]
-        //public async Task<IActionResult> CreateOrder()
-        //{
-        //    // Получаем информацию о продукте по ID
-        //    ProductDTO product = await productservice.GetByID(id);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateOrder(OrderProductViewModel OPVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(OPVM); // Повторно показать форму, если есть ошибки
+            }
 
-        //    // Создаем модель для представления
-        //    var orderProductViewModel = new OrderProductViewModel
-        //    {
-        //        ProductID = product.pdID,
-        //        ProductName = product.pdName,
-        //        ProductCost = product.pdCost,
-        //        Quantity = 1 // Минимальное количество
-        //    };
+            // Получаем информацию о продукте
+            var product = await productservice.GetByID(OPVM.ProductID);
+            if (product == null)
+            {
+                ModelState.AddModelError("", "Продукт не найден.");
+                return View(OPVM);
+            }
 
-        //    return View(orderProductViewModel);
-        //}
+            // Проверяем наличие товара на складе
+            if (product.pdQuantity < OPVM.Quantity)
+            {
+                ModelState.AddModelError("", "Недостаточно товара на складе.");
+                return View(OPVM);
+            }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> CreateOrder(OrderProductViewModel OPVM)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(OPVM); // Повторно показать форму
-        //    }
+            // Получаем ID пользователя из клейма
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized();
+            }
 
-        //    // Создание нового заказа
-        //    var newOrder = new OrderDTO
-        //    {
-        //        dUserID = int.Parse(User.Identity.Name), // ID текущего пользователя
-        //        dOrderDate = DateTime.Now,
-        //        dTotalAmount = OPVM.ProductCost * OPVM.Quantity,
-        //    };
+            // 1. Создание нового заказа (связанного с пользователем)
+            var newOrder = new OrderDTO
+            {
+                dUserID = userId.ToString(),
+                dOrderDate = DateTime.Now,
+                dTotalAmount = (decimal)(OPVM.ProductCost * OPVM.Quantity), // Приведение к decimal для расчета суммы
+                dOrderProducts = new List<OrderProductDTO>()
+            };
 
-        //    // Добавляем продукт в заказ
-        //    newOrder.dOrderProducts.Add(new OrderProduct
-        //    {
-        //        ProductID = OPVM.ProductID,
-        //        Quantity = OPVM.Quantity
-        //    });
+            // Добавляем продукт в заказ
+            var orderProduct = new OrderProductDTO
+            {
+                dProductId = OPVM.ProductID,
+                dQuantity = OPVM.Quantity
+            };
+            newOrder.dOrderProducts.Add(orderProduct);
 
-        //    // Сохранение заказа
-        //    await orderservice.Create(newOrder);
+            // 2. Сохраняем заказ в базе
+            await orderservice.Create(newOrder); // сохраняем заказ
 
-        //    return RedirectToAction("Index", "Product"); // Перенаправление на список продуктов
-        //}
+            // 3. Уменьшаем количество товара на складе
+            product.pdQuantity -= OPVM.Quantity;
+            await productservice.Update(product); // обновление товара в базе
+
+            // 4. Добавляем запись в таблицу OrderProduct
+            foreach (var orderProductDto in newOrder.dOrderProducts)
+            {
+                var orderProductEntity = new OrderProduct
+                {
+                    OrderID = newOrder.dOrderID,  // ID заказа (который генерируется после сохранения)
+                    ProductID = orderProductDto.dProductId,
+                    Quantity = orderProductDto.dQuantity
+                };
+
+                // Добавляем связь между заказом и продуктом в базу данных
+                await orderservice.CreateOrderProduct(orderProductEntity); // Метод для добавления записи в таблицу OrderProduct
+            }
+
+            // Перенаправляем пользователя на список продуктов
+            return RedirectToAction("Index", "Product");
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpGet]

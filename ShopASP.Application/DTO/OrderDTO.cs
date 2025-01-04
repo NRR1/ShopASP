@@ -11,7 +11,7 @@ namespace ShopASP.Application.DTO
         public int dOrderID { get; set; }
         public string dUserID { get; set; }
         public DateTime dOrderDate { get; set; }
-        public int dTotalAmount { get; set; }
+        public decimal dTotalAmount { get; set; }
 
         public List<OrderProductDTO> dOrderProducts { get; set; }
     }
