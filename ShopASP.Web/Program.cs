@@ -8,7 +8,7 @@ using ShopASP.Domain.Interfaces;
 using ShopASP.Infrastructure.Data;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
+// Add services to the container, bitch
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
