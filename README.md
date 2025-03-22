@@ -1,2 +1,2 @@
 # ShopASP
-# Я покидаю проект. ©AvdoshkaMMM
+# i`m always come back. ©AvdoshkaMMM
